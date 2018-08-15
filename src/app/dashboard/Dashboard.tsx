@@ -1,24 +1,11 @@
 import React, { Component } from 'react'
-import { Input, Card } from '../../ui'
+import { Card } from '../../ui'
 
 export class Dashboard extends Component {
   public render() {
     return (
       <Card>
-        <form>
-          <fieldset>
-            <h3>Dashboard Actions</h3>
-            <div>
-              <Input
-                initValue=""
-                label="Test"
-                onChange={(value) => {
-                  console.log(value)
-                }}
-              />
-            </div>
-          </fieldset>
-        </form>
+        <h3>Dashboard</h3>
       </Card>
     )
   }

@@ -1,7 +1,21 @@
 import React, { Component } from 'react'
 import { Input, Card } from '../../../ui'
+import { inject, observer } from 'mobx-react'
+import { ExchangeStore } from './exchange.store'
 
-export class Exchange extends Component {
+interface Props {
+  exchangeStore?: ExchangeStore
+}
+
+@inject('exchangeStore')
+@observer
+export class Exchange extends Component<Props> {
+  constructor(props) {
+    super(props)
+
+    this.props.exchangeStore.loadAll()
+  }
+
   public render() {
     return (
       <Card>

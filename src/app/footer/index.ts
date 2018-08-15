@@ -1,2 +1,2 @@
-export * from './Error'
-export * from './error.store'
+export * from './Footer'
+export * from './log.store'

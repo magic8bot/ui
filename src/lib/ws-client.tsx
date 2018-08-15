@@ -1,4 +1,4 @@
-import { errorStore } from '../app/footer'
+import { logStore } from '../app/footer'
 
 type Payload = Record<string, any>
 
@@ -21,7 +21,10 @@ class WsClient {
   }
 
   public broadcast(action: string, payload: Payload) {
-    this.socket.send(JSON.stringify({ action, payload }))
+    const request = !payload ? { action } : { action, payload }
+    const body = JSON.stringify(request)
+    logStore.addSent(`sent ${body}`)
+    this.socket.send(body)
   }
 
   public registerAction(actionName: string, actionFn: (payload: Payload) => void) {
@@ -32,6 +35,7 @@ class WsClient {
 
   private handleMessage = ({ data }: MessageEvent) => {
     const body = data.toString()
+    logStore.addRec(`received ${body}`)
 
     try {
       const parsed = JSON.parse(body)
@@ -54,9 +58,9 @@ class WsClient {
   }
 
   private error(error: string) {
-    errorStore.addError(error)
+    logStore.addError(error)
   }
 }
 
 export const wsClient = new WsClient()
-wsClient.registerAction('error', ({ error }) => errorStore.addError(error))
+wsClient.registerAction('error', ({ error }) => logStore.addError(error))

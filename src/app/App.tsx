@@ -9,7 +9,7 @@ import { Router } from 'react-router'
 import { Header } from './header'
 import { Sidebar } from './sidebar'
 import { Content } from './content'
-import { ErrorBox } from './footer'
+import { Footer } from './footer'
 
 const browserHistory = createBrowserHistory()
 const routing = new RouterStore()
@@ -31,7 +31,7 @@ export class App extends Component {
               <Sidebar />
               <Content />
             </main>
-            <ErrorBox />
+            <Footer />
           </div>
         </Router>
       </Provider>

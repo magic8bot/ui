@@ -7,7 +7,7 @@ import { Route, Switch, Redirect } from 'react-router'
 
 import { Exchange, Strategy, Wallet } from '../settings'
 import { Dashboard } from '../dashboard'
-import { Card } from '../../ui'
+import { Card, Breadcrumbs } from '../../ui'
 
 interface Props {
   routing?: RouterStore
@@ -22,7 +22,7 @@ export class Content extends Component<Props> {
     return (
       <section className="content">
         <Card size="small">
-          Current pathname: {location.pathname} {location.key}
+          <Breadcrumbs path={location.pathname} />
         </Card>
         <Switch>
           <Route exact path="/" render={() => <Redirect to="/dashboard" />} />
