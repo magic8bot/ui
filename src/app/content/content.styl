@@ -1,0 +1,16 @@
+.content
+  flex-grow 1
+  position relative
+
+.fade-enter,
+.fade-exit
+  position absolute
+  top 46px
+
+.fade-enter
+  opacity 0
+  z-index 1
+
+.fade-enter.fade-enter-active
+  opacity 1
+  transition opacity 250ms ease-in
