@@ -5,32 +5,26 @@ import { inject, observer } from 'mobx-react'
 import { RouterStore } from 'mobx-react-router'
 import { Route, Switch, Redirect } from 'react-router'
 
-import { Exchange, Strategy, Wallet } from '../settings'
-import { Dashboard } from '../dashboard'
+import { Home } from '../home'
 import { Card, Breadcrumbs } from '../../ui'
-
-interface Props {
-  routing?: RouterStore
-}
+import { Footer } from '../footer'
 
 @inject('routing')
 @observer
-export class Content extends Component<Props> {
+export class Content extends Component {
   public render() {
-    const { location } = this.props.routing
-
     return (
       <section className="content">
-        <Card size="small">
-          <Breadcrumbs path={location.pathname} />
-        </Card>
-        <Switch>
-          <Route exact path="/" render={() => <Redirect to="/dashboard" />} />
-          <Route exact path="/dashboard" render={() => <Dashboard />} />
-          <Route exact path="/settings/exchanges" render={() => <Exchange />} />
-          <Route exact path="/settings/strategies" render={() => <Strategy />} />
-          <Route exact path="/settings/wallets" render={() => <Wallet />} />
-        </Switch>
+        <div className="main-content">
+          <Switch>
+            <Route exact path="/" render={() => <Redirect to="/home" />} />
+            <Route exact path="/home" render={() => <Home />} />
+            {/* <Route exact path="/settings/exchanges" render={() => <Exchange />} />
+            <Route exact path="/settings/strategies" render={() => <Strategy />} />
+            <Route exact path="/settings/wallets" render={() => <Wallet />} /> */}
+          </Switch>
+        </div>
+        <Footer />
       </section>
     )
   }

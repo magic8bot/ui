@@ -7,20 +7,27 @@ class WsClient {
   private actions: Map<string, (payload: Payload) => void> = new Map()
   private failures = 0
 
+  private queue: { action: string; payload: Payload }[] = []
+
   public connect = () => {
     return new Promise((resolve) => {
       this.socket = new WebSocket('ws://localhost:19807')
 
       this.socket.onmessage = this.handleMessage
-      this.socket.onclose = this.reconnect
+      this.socket.onclose = () => {
+        this.socket = null
+        this.reconnect()
+      }
       this.socket.onopen = () => {
         this.failures = 0
+        if (this.queue.length) this.emptyQueue()
         resolve()
       }
     })
   }
 
-  public broadcast(action: string, payload: Payload) {
+  public broadcast(action: string, payload?: Payload) {
+    if (!this.socket) return this.queue.push({ action, payload })
     const request = !payload ? { action } : { action, payload }
     const body = JSON.stringify(request)
     logStore.addSent(`sent ${body}`)
@@ -55,6 +62,13 @@ class WsClient {
     this.failures++
     if (this.failures >= 5) return
     setTimeout(this.connect, 500 * this.failures)
+  }
+
+  private emptyQueue() {
+    if (!this.queue.length) return
+    const { action, payload } = this.queue.shift()
+    this.broadcast(action, payload)
+    this.emptyQueue()
   }
 
   private error(error: string) {

@@ -12,7 +12,11 @@ export class LogStore {
 
   @computed
   public get logs(): LogType[] {
-    return this._logs.slice(0, 25)
+    return this._logs
+      .slice(0)
+      .reverse()
+      .slice(0, 25)
+      .reverse()
   }
 
   @action

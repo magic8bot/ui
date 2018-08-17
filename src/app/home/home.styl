@@ -1,0 +1,41 @@
+@import '../../styles/colors'
+
+.home
+  display flex
+  flex-grow 1
+  flex-direction column
+
+  .home-top,
+  .home-center,
+  .home-bottom
+    margin-top 1px
+    display flex
+
+  .home-top,
+  .home-header
+    height 45px
+
+  .home-center
+    height 300px
+
+  .home-bottom
+    flex-grow 1
+
+  .home-split
+    flex 50%
+    display flex
+  
+  .home-item
+    margin-left 1px
+    background-color $lightBg
+    flex-grow 1
+    padding 10px
+
+    &.home-item-25
+      flex 25%
+
+    &.home-item-50
+      flex 50%
+
+    &.home-item-75
+      flex 75%

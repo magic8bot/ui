@@ -1,10 +1,26 @@
 @import '../../styles/colors'
+@import '../../styles/vars'
 
 .header
-  color $primary
-  background-color $lightBg
-  padding 10px
-  font-weight 600
+  display flex
+
+  .logo,
+  .inner-header
+    padding 10px
+    color $primary
+    background-color $lightBg
+
+  .logo
+    flex-shrink 0
+    flex-grow 0
+    font-weight 600
+    margin-right 1px
+    width $sidebar-width
+
+  .inner-header
+    flex-grow 1
+    display flex
+    justify-content space-between
 
   .small
     color mix($primary, #222222)
