@@ -10,8 +10,8 @@ html
   font-size 62.5%
 
 body
-  color $darkShade
-  background-color $darkBg
+  color $textColor
+  background-color $backgroundHighlight
   font-family 'Roboto', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif
   font-size 1.6em
   font-weight 300
@@ -19,7 +19,7 @@ body
   line-height 1.6
 
 blockquote
-  border-left 0.3rem solid $lightAccent
+  border-left 0.3rem solid $blockquoteBorderColor
   margin-left 0
   margin-right 0
   padding 1rem 1.5rem
@@ -31,10 +31,10 @@ button,
 input[type='button'],
 input[type='reset'],
 input[type='submit']
-  background-color $brand
-  border 0.1rem solid $brand
+  background-color $buttonBackground
+  border 0.1rem solid $buttonBackground
   border-radius .4rem
-  color $lightShade
+  color $buttonText
   cursor pointer
   display inline-block
   font-size 1.1rem
@@ -57,9 +57,8 @@ input[type='reset']:focus,
 input[type='reset']:hover,
 input[type='submit']:focus,
 input[type='submit']:hover
-  background-color $darkShade
-  border-color $darkShade
-  color $lightShade
+  background-color $buttonBackgroundHover
+  border-color $buttonBackgroundHover
   outline 0
 
 .button[disabled],
@@ -79,8 +78,8 @@ input[type='reset'][disabled]:focus,
 input[type='reset'][disabled]:hover,
 input[type='submit'][disabled]:focus,
 input[type='submit'][disabled]:hover
-  background-color $brand
-  border-color $brand
+  background-color $buttonBackgroundDisabled
+  border-color $buttonBackgroundDisabled
 
 .button.button-outline,
 button.button-outline,
@@ -88,7 +87,7 @@ input[type='button'].button-outline,
 input[type='reset'].button-outline,
 input[type='submit'].button-outline
   background-color transparent
-  color $brand
+  color $buttonOutlineText
 
 .button.button-outline:focus, .button.button-outline:hover,
 button.button-outline:focus,
@@ -100,8 +99,8 @@ input[type='reset'].button-outline:hover,
 input[type='submit'].button-outline:focus,
 input[type='submit'].button-outline:hover
   background-color transparent
-  border-color $darkShade
-  color $darkShade
+  border-color $buttonOutlineBackgroundHover
+  color $buttonOutlineTextHover
 
 .button.button-outline[disabled]:focus, .button.button-outline[disabled]:hover,
 button.button-outline[disabled]:focus,
@@ -113,7 +112,7 @@ input[type='reset'].button-outline[disabled]:hover,
 input[type='submit'].button-outline[disabled]:focus,
 input[type='submit'].button-outline[disabled]:hover
   border-color inherit
-  color $brand
+  color $buttonOutlineTextDisabled
 
 .button.button-clear,
 button.button-clear,
@@ -122,7 +121,7 @@ input[type='reset'].button-clear,
 input[type='submit'].button-clear
   background-color transparent
   border-color transparent
-  color $brand
+  color $buttonClearText
 
 .button.button-clear:focus, .button.button-clear:hover,
 button.button-clear:focus,
@@ -135,7 +134,7 @@ input[type='submit'].button-clear:focus,
 input[type='submit'].button-clear:hover
   background-color transparent
   border-color transparent
-  color $darkShade
+  color $buttonClearTextHover
 
 .button.button-clear[disabled]:focus, .button.button-clear[disabled]:hover,
 button.button-clear[disabled]:focus,
@@ -146,10 +145,10 @@ input[type='reset'].button-clear[disabled]:focus,
 input[type='reset'].button-clear[disabled]:hover,
 input[type='submit'].button-clear[disabled]:focus,
 input[type='submit'].button-clear[disabled]:hover
-  color $brand
+  color $buttonClearTextDisabled
 
 code
-  background $lightAccent
+  background $codeBackground
   border-radius .4rem
   font-size 86%
   margin 0 .2rem
@@ -157,8 +156,8 @@ code
   white-space nowrap
 
 pre
-  background $lightAccent
-  border-left 0.3rem solid $brand
+  background $preBackground
+  border-left 0.3rem solid $preBorderColor
   overflow-y hidden
   & > code
     border-radius 0
@@ -168,7 +167,7 @@ pre
 
 hr
   border 0
-  border-top 0.1rem solid $lightAccent
+  border-top 0.1rem solid $hrColor
   margin 3.0rem 0
 
 input[type='email'],
@@ -180,10 +179,10 @@ input[type='text'],
 input[type='url'],
 textarea,
 select
+  -webkit-appearance none
   appearance none
-  appearance none
-  background-color rgba($white, 0.75)
-  border 0.1rem solid $lightAccent
+  background-color $inputBackground
+  border 0.1rem solid $inputBorder
   transition border-color 200ms linear
   border-radius .4rem
   box-shadow none
@@ -203,16 +202,19 @@ input[type='text']:focus,
 input[type='url']:focus,
 textarea:focus,
 select:focus
-  border-color rgba($darkAccent, 0.7)
+  border-color $inputBorderFocus
   outline 0
 
+svgUrl($color)
+  return 'data:image/svg+xml;utf8,<svg xmlns=\"http://www.w3.org/2000/svg\" height=\"14\" viewBox=\"0 0 29 14\" width=\"29\"><path fill=\"' + $color + '\" d=\"M9.37727 3.625l5.08154 6.93523L19.54036 3.625\"/></svg>'
+
 select
-  background url('data:image/svg+xml
-  utf8,<svg xmlns="http //www.w3.org/2000/svg" height="14" viewBox="0 0 29 14" width="29"><path fill="$lightAccent" d="M9.37727 3.625l5.08154 6.93523L19.54036 3.625"/></svg>') center right no-repeat
+  $url = svgUrl($selectArrowColor)
+  background url($url) center right no-repeat
   padding-right 3.0rem
   &:focus
-    background-image url('data:image/svg+xml
-    utf8,<svg xmlns="http //www.w3.org/2000/svg" height="14" viewBox="0 0 29 14" width="29"><path fill="$brand" d="M9.37727 3.625l5.08154 6.93523L19.54036 3.625"/></svg>')
+    $url = svgUrl($selectArrowColorFocus)
+    background-image url($url)
 
 textarea
   min-height 6.5rem
@@ -344,11 +346,11 @@ input[type='radio']
       padding 0 1.0rem
 
 a
-  color $brand
+  color $linkColor
   text-decoration none
 
 a:focus, a:hover
-  color $darkShade
+  color $linkColorHover
 
 dl,
 ol,
@@ -405,7 +407,7 @@ table
 
 td,
 th
-  border-bottom 0.1rem solid $lightShade
+  border-bottom 0.1rem solid $tableBorderColor
   padding 1.2rem 1.5rem
   text-align left
 

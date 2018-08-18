@@ -7,8 +7,11 @@
   .logo,
   .inner-header
     padding 10px
-    color $primary
-    background-color $lightBg
+    background-color $backgroundColor
+    color $fadedText
+
+  .logo
+    color $headerLogoColor
 
   .logo
     flex-shrink 0
@@ -22,6 +25,6 @@
     display flex
     justify-content space-between
 
-  .small
-    color mix($primary, #222222)
-    font-weight 300
+    small
+      color $headerSmallColor
+      font-weight 300
