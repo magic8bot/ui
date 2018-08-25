@@ -1,0 +1,57 @@
+@import '../../styles/colors'
+
+$radius = 15px
+$border = 2px
+
+.progress-steps-container
+  margin 20px auto
+
+  .progress-steps
+    margin 0
+    padding 0
+    counter-reset step
+    display flex
+
+    li
+      list-style-type none
+      flex 1
+      font-size 14px + ($border / 2)
+      position relative
+      text-align center
+      text-transform uppercase
+      color $progressBarInctive
+    
+      &:before
+        width $radius * 2
+        height $radius * 2
+        content counter(step)
+        counter-increment step
+        line-height ($radius * 2) - ($border * 2)
+        border $border solid $progressBarInctive
+        display block
+        text-align center
+        margin 0 auto 10px auto
+        border-radius 50%
+
+      &:after
+        width "calc(100% - %s)" % ($radius * 2)
+        height $border
+        content ''
+        position absolute
+        background-color $progressBarInctive
+        top $radius
+        left "calc(-50% + %s)" % $radius
+        z-index -1
+
+      &:first-child:after
+        content none
+
+      &.active
+        color $progressBarActive
+
+      &.active:before
+        border-color $progressBarActive
+
+      &.active + li:after
+        background-color $progressBarActive
+        z-index 1

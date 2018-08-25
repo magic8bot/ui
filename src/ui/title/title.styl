@@ -1,0 +1,17 @@
+@import '../../styles/colors'
+
+.title
+  color $brand
+
+  &.title-uppercase
+    text-transform uppercase
+
+  &:after
+    content ''
+    position absolute
+    width calc(100% - 30px)
+    height 1px
+    margin-top 5px
+
+  &.title-underlined:after
+    background: linear-gradient(to right, rgba($brand, 0) 0%, rgba($brand, .3) 4%, rgba($brand, 0) 80%)

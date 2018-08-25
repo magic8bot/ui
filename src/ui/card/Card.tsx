@@ -4,8 +4,9 @@ import React from 'react'
 
 interface Props extends React.Props<any> {
   size?: 'small' | 'large'
+  className?: string
 }
 
-export const Card = ({ size = 'large', children }: Props) => {
-  return <div className={`card card-${size}`}>{children}</div>
+export const Card = ({ size = 'large', children, className = '' }: Props) => {
+  return <div className={`card card-${size} ${className}`}>{children}</div>
 }

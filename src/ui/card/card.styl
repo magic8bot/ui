@@ -1,11 +1,14 @@
 @import '../../styles/colors'
+@import '../../styles/vars'
 
 .card
-  background $backgroundColor
-  margin 1px 0 1px 1px
+  background $cardBackground
+  margin $border-width 0 0 $border-width
+  position relative
+  width 100%
 
   &.card-small
     padding 10px
   
   &.card-large
-    padding 20px
+    padding 10px 20px
