@@ -6,22 +6,26 @@ import { RouterStore } from 'mobx-react-router'
 import { Route, Switch, Redirect } from 'react-router'
 
 import { Home } from '../home'
-import { Card, Breadcrumbs } from '../../ui'
 import { Footer } from '../footer'
+import { Exchanges } from '../exchanges'
+
+interface Props {
+  routing?: RouterStore
+}
 
 @inject('routing')
 @observer
-export class Content extends Component {
+export class Content extends Component<Props> {
   public render() {
+    const { location } = this.props.routing
+
     return (
       <section className="content">
         <div className="main-content">
-          <Switch>
+          <Switch location={location}>
             <Route exact path="/" render={() => <Redirect to="/home" />} />
             <Route exact path="/home" render={() => <Home />} />
-            {/* <Route exact path="/settings/exchanges" render={() => <Exchange />} />
-            <Route exact path="/settings/strategies" render={() => <Strategy />} />
-            <Route exact path="/settings/wallets" render={() => <Wallet />} /> */}
+            <Route exact path="/exchanges" render={() => <Exchanges />} />
           </Switch>
         </div>
         <Footer />

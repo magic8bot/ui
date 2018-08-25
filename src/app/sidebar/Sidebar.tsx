@@ -2,6 +2,9 @@ import './sidebar.styl'
 
 import React, { Component } from 'react'
 
+import { faUser, faCalendarAlt, faQuestionCircle } from '@fortawesome/free-regular-svg-icons'
+import { faHome, faChartBar, faCog, faExchangeAlt, faRobot } from '@fortawesome/free-solid-svg-icons'
+
 import { SidebarItem } from './sidebar-item'
 import { Link } from '../../ui'
 
@@ -11,27 +14,30 @@ export class Sidebar extends Component {
       <aside className="sidebar">
         <div>
           <Link to="/home">
-            <SidebarItem label="Home" />
+            <SidebarItem text="Home" icon={faHome} />
           </Link>
           <Link to="/charts">
-            <SidebarItem label="Charts" />
+            <SidebarItem text="Charts" icon={faChartBar} />
           </Link>
           <Link to="/bots">
-            <SidebarItem label="Bots" />
+            <SidebarItem text="Bots" icon={faRobot} />
           </Link>
           <Link to="/exchanges">
-            <SidebarItem label="Config" />
+            <SidebarItem text="Exchanges" icon={faExchangeAlt} />
+          </Link>
+          <Link to="/calendar">
+            <SidebarItem text="Calendar" icon={faCalendarAlt} />
           </Link>
         </div>
         <div>
           <Link to="/account">
-            <SidebarItem label="Account" />
+            <SidebarItem text="Account" icon={faUser} />
           </Link>
           <Link to="/settings">
-            <SidebarItem label="Settings" />
+            <SidebarItem text="Settings" icon={faCog} />
           </Link>
           <Link to="/support">
-            <SidebarItem label="Support" />
+            <SidebarItem text="Support" icon={faQuestionCircle} />
           </Link>
         </div>
       </aside>

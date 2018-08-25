@@ -1,0 +1,33 @@
+@import './colors'
+
+.react-select-container
+  width 100%
+  margin-bottom 2rem
+
+  .react-select__control
+    background-color transparent
+    box-shadow none !important
+    height 40px
+
+    &:hover,
+    &.react-select__control--is-focused
+      border-color $brand
+
+    .react-select__value-container
+      .react-select__placeholder,
+      .react-select__single-value
+        color $brand
+    // .react-select__indicators
+
+  .react-select__menu
+    .react-select__menu-list
+      .react-select__option
+        color $darkGrey
+        height 40px
+
+        &:hover,
+        &.react-select__option--is-focused
+          background-color lighten($brand, 15%)
+
+        &.react-select__option--is-selected
+          background-color $brand

@@ -37,7 +37,6 @@ export class Footer extends Component<Props> {
   }
 
   private handleToggle = () => {
-    console.log('CLICKed')
     this.isClosed = !this.isClosed
   }
 

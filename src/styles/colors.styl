@@ -14,63 +14,114 @@ $stiletto      = #993638
 $swirl         = #d7d1cb
 $sycamore      = #7f9442
 $thunder       = #312528
-$white         = #ffffff
+$white         = #eeeeee
 
-$lightShade = $swirl
-$lightAccent = $salt-box
-$brand = $pomegranate
-$darkAccent = $stiletto
-$darkShade = $thunder
+// branding
+$cod-gray      = #0A070A
+$ship-gray     = #333237
+$rob-roy       = #eac77a
+$westar        = #e5e2d9
+$mischka       = #e5e4e6
 
-$primary = $flamingo
-$info = $jagged-ice
-$success = $sycamore
-$warning = $sorbus
-$danger = $guardsman-red
+// Reds
+$salmon        = #ff8473
+$coral-red     = #ff4241
+$copper-rust   = #984843
 
-$backgroundColor = $thunder
-$backgroundHighlight = lighten($backgroundColor, 10)
-$cardBackground = $gray-nurse
+// Greens
+$emerald       = #3cc480
+$sea-green     = #2C8E5D
+$green-pea     = #216B46
 
-$textColor = $darkAccent
-$fadedText = rgba($brand, 0.4)
+// Blues
+$dodger-blue   = #3c86ff
+$malibu        = #55d7fe
+$melrose       = #a3a0fb
+$gun-powder    = #43425c
 
-$linkColor = $ronchi
-$linkColorHover = $brand
+// Greys
+$grey          = #555555
+$lightestGrey  = lighten($grey, 70%)
+$lighterGrey   = lighten($grey, 50%)
+$lightGrey     = lighten($grey, 15%)
+$darkGrey      = darken($grey, 15%)
+$darkerGrey    = darken($grey, 50%)
+$darkestGrey   = darken($grey, 70%)
+
+$lightShade = $mischka
+$lightAccent = $westar
+$brand = $rob-roy
+$darkAccent = $ship-gray
+$darkShade = $cod-gray
+$redAccent = $copper-rust
+
+$primary = $brand
+$info = $malibu
+$success = $emerald
+$warning = $salmon
+$danger = $coral-red
+
+$backgroundColor = $darkShade
+$cardBackground = $darkAccent
+
+$textColor = $lightShade
+$fadedText = darken($textColor, 30%)
+
+$linkColor = $lightShade
+$linkColorHover = lighten($linkColor, 15%)
 
 $inputText = $brand
-$inputBackground = rgba($white, 0.75)
-$inputBorder = $salt-box
-$inputBorderFocus = rgba($darkAccent, 0.7)
+$inputBackground = transparent
+$inputBorder = $lightestGrey
+$inputBorderFocus = $brand
 
-$selectArrowColor = $salt-box
+$selectArrowColor = $lightAccent
 $selectArrowColorFocus = $brand
 
-$buttonText = $swirl
+$buttonText = $darkShade
+$buttonTextHover = $brand
 $buttonBackground = $brand
-$buttonBackgroundHover = $thunder
+$buttonBackgroundHover = transparent
 $buttonBackgroundDisabled = $brand
+$buttonBorder = $brand
+$buttonBorderHover = $lightestGrey
 
 $buttonOutlineText = $brand
-$buttonOutlineTextHover = $thunder
-$buttonOutlineBackgroundHover = $thunder
+$buttonOutlineTextHover = $lightestGrey
+$buttonOutlineBorderHover = $lightestGrey
 $buttonOutlineTextDisabled = $brand
 
+$buttonSuccessOutlineText = $success
+$buttonSuccessOutlineBorderHover = $success
+$buttonSuccessOutlineTextHover = $success
+$buttonSuccessOutlineTextDisabled = $success
+
+$buttonDangerOutlineText = $danger
+$buttonDangerOutlineBorderHover = $danger
+$buttonDangerOutlineTextHover = $danger
+$buttonDangerOutlineTextDisabled = $danger
+
 $buttonClearText = $brand
-$buttonClearTextHover = $thunder
+$buttonClearTextHover = $darkShade
 $buttonClearTextDisabled = $brand
 
-$tableBorderColor = $swirl
+$tableBorderColor = $lightShade
 
-$blockquoteBorderColor = $salt-box
-$codeBackground = $salt-box
-$preBackground = $salt-box
+$blockquoteBorderColor = $lightAccent
+$codeBackground = $lightAccent
+$preBackground = $lightAccent
 $preBorderColor = $brand
-$hrColor = $salt-box
+$hrColor = $lightAccent
 
-$headerLogoColor = $brand
+$headerLogoColor = $lightAccent
 $headerSmallColor = $fadedText
 
 $logItemSentColor = $warning
 $logItemReceivedColor = $success
 $logItemErrorColor = $danger
+
+$sidebarIcon = $brand
+$sidebarLabel = $white
+
+$progressBarActive = $sea-green
+$progressBarInctive = $lightGrey
