@@ -2,13 +2,14 @@ import React, { Component } from 'react'
 import { observer, inject } from 'mobx-react'
 
 import { Field, FieldNode, FieldRoot, AppStore } from '../app.store'
-import { Card, Title, Subtext, Input } from '../../ui'
+import { Card, Title, Subtext, Input, Flex } from '../../ui'
 import { observable, autorun, reaction } from 'mobx'
 
 interface Props {
   name: string
   description: string
   fields: Field[]
+  isNew: boolean
   values: Record<string, any>
   appStore?: AppStore
 }
@@ -19,12 +20,18 @@ export class Exchange extends Component<Props> {
   @observable
   public values: Record<string, any> = {}
 
+  @observable
+  private isNew = true
+
   private saveTimeout: number = null
 
   constructor(props) {
     super(props)
 
-    reaction(() => Object.entries(this.values), () => this.saveValues())
+    this.values.tradePollInterval = this.props.values.tradePollInterval
+    this.isNew = this.props.isNew
+
+    reaction(() => Object.entries(this.values), () => this.updateValues())
   }
 
   public render() {
@@ -34,7 +41,10 @@ export class Exchange extends Component<Props> {
           <div>{this.props.name}</div>
         </Title>
         <Subtext>{this.props.description}</Subtext>
-        {this.renderFields(this.props.fields)}
+        <form onSubmit={this.saveExchange}>
+          {this.renderFields(this.props.fields)}
+          {this.renderButton()}
+        </form>
       </Card>
     )
   }
@@ -49,38 +59,69 @@ export class Exchange extends Component<Props> {
         <Title size={3} isUppercase>
           {field.name}
         </Title>
-        {this.renderFields(
-          field.type.map((f) => {
-            f.name = `${field.name}.${f.name}`
-            return f
-          })
-        )}
+        {this.renderFields(field.type.map((f) => ({ ...f, name: `${field.name}.${f.name}` })))}
       </div>
     )
   }
 
   private renderField(idx: number, field: FieldNode) {
     const initValue = !this.props.values || !this.props.values[field.name] ? '' : this.props.values[field.name]
+    const isRequired = field.name.includes('auth.')
+
     return (
       <div key={idx}>
-        <Input label={field.prettyName} type={field.type} help={field.description} initValue={initValue} onChange={(value) => (this.values[field.name] = value)} />
+        <Input
+          label={field.prettyName}
+          type={field.type}
+          required={isRequired}
+          help={field.description}
+          initValue={initValue}
+          onChange={(value) => (this.values[field.name] = value)}
+        />
       </div>
     )
   }
 
-  private saveValues() {
-    const values: any = Object.entries(this.values).reduce((acc, [key, value]) => {
-      acc[key] = value
-      return acc
-    }, {})
+  private saveExchange = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+
+    const values: any = this.getValues()
+    this.isNew = false
+
+    this.props.appStore.saveExchange({ exchange: this.props.name, ...values })
+  }
+
+  private updateValues() {
+    if (this.isNew) return
+
+    const values: any = this.getValues()
 
     if (!Object.keys(values).length) return
 
     window.clearTimeout(this.saveTimeout)
 
     this.saveTimeout = window.setTimeout(() => {
-      this.props.appStore.saveExchange({ exchange: this.props.name, ...values })
+      this.props.appStore.updateExchange({ exchange: this.props.name, ...values })
       this.values = {}
-    }, 800)
+    }, 2000)
+  }
+
+  private getValues(): any {
+    return Object.entries(this.values).reduce((acc, [key, value]) => {
+      acc[key] = value
+      return acc
+    }, {})
+  }
+
+  private renderButton() {
+    if (!this.isNew) return null
+
+    return (
+      <Flex alignment="end">
+        <button className="button" type="submit">
+          Authorize
+        </button>
+      </Flex>
+    )
   }
 }

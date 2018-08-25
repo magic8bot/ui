@@ -1,4 +1,4 @@
-import { observable } from 'mobx'
+import { observable, action } from 'mobx'
 import { wsClient } from '../lib'
 
 interface FieldBase {
@@ -64,6 +64,7 @@ export interface ExchangeConfig {
   exchange: string
   strategies: StrategyConfig[]
   tradePollInterval: number
+  isNew: boolean
 }
 
 export interface Config {
@@ -98,7 +99,16 @@ export class AppStore {
     wsClient.broadcast('get-strategies')
   }
 
+  @action
+  public addExchange(exchange: string) {
+    this.config.exchanges.push({ exchange, strategies: [], tradePollInterval: 500, isNew: true })
+  }
+
   public saveExchange(exchangeConfig: ExchangeConfig) {
+    wsClient.broadcast('add-exchange', exchangeConfig)
+  }
+
+  public updateExchange(exchangeConfig: ExchangeConfig) {
     wsClient.broadcast('update-exchange', exchangeConfig)
   }
 }

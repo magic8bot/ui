@@ -9,6 +9,7 @@ import { faEye, faEyeSlash } from '@fortawesome/free-regular-svg-icons'
 interface Props {
   initValue: string
   label: string
+  required?: boolean
   type?: string
   help?: string
   onChange: (value: string) => void
@@ -16,7 +17,7 @@ interface Props {
 
 @observer
 export class Input extends Component<Props> {
-  public static defaultProps = { type: 'text' }
+  public static defaultProps = { type: 'text', required: false }
 
   @observable
   public value: string = this.props.initValue
@@ -34,7 +35,7 @@ export class Input extends Component<Props> {
   }
 
   private renderInput() {
-    return <input type={this.props.type} value={this.value} onChange={this.handleChange} />
+    return <input type={this.props.type} value={this.value} required={this.props.required} onChange={this.handleChange} />
   }
 
   private renderPassword() {
@@ -45,7 +46,7 @@ export class Input extends Component<Props> {
 
     return (
       <Flex className="input-group">
-        <input className="input" type={type} autoComplete="off" value={this.value} onChange={this.handleChange} />
+        <input className="input" type={type} autoComplete="off" value={this.value} required={this.props.required} onChange={this.handleChange} />
         <div className={className} onClick={onClick}>
           <FontAwesomeIcon icon={icon} />
         </div>
