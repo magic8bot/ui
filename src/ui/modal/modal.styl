@@ -1,0 +1,24 @@
+@import '../../styles/colors'
+
+.modal-overlay
+  position fixed
+  top 0
+  left 0
+  right 0
+  bottom 0
+  background-color rgba(black, .6)
+  display flex
+  justify-content space-around
+  align-items center
+
+  .modal
+    height 200px
+    width 600px
+    background-color $cardBackground
+    padding 20px
+
+    &:focus
+      outline 0
+
+    .modal-actions
+      margin-top 30px

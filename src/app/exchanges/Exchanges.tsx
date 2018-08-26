@@ -5,7 +5,7 @@ import { inject, observer } from 'mobx-react'
 import { faExchangeAlt } from '@fortawesome/free-solid-svg-icons'
 
 import { AppStore } from '../app.store'
-import { Flex, Card, Title, Subtext, TextWithIcon, Warntext, Button, InputGroup, Select } from '../../ui'
+import { Flex, Card, Title, Subtext, TextWithIcon, Warntext, Button, InputGroup, Select, Infotext } from '../../ui'
 import { Exchange } from './Exchange'
 
 interface Props {
@@ -48,7 +48,7 @@ export class Exchanges extends Component<Props> {
           </InputGroup>
         </Card>
 
-        {this.renderWarning()}
+        {this.renderInfo()}
 
         {this.renderExchanges()}
       </Flex>
@@ -79,19 +79,19 @@ export class Exchanges extends Component<Props> {
     )
   }
 
-  private renderWarning() {
+  private renderInfo() {
     const { appStore } = this.props
     if (!appStore.config || !appStore.config.exchanges.length || !appStore.exchanges) return null
 
     return (
       <Card>
-        <Warntext>
+        <Infotext>
           Warning: Modifying any setting for an exchange{' '}
           <i>
             <b>will stop</b>
           </i>{' '}
           all trade syncs, tickers, and strategies. It's up to you to manually restart them.
-        </Warntext>
+        </Infotext>
       </Card>
     )
   }

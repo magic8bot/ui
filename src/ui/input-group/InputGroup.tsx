@@ -3,7 +3,11 @@ import './input-group.styl'
 import React from 'react'
 import { Flex } from '../flex'
 
-export const InputGroup = ({ children }: React.Props<any>) => {
+interface Props extends React.Props<any> {
+  alignment?: 'start' | 'end'
+}
+
+export const InputGroup = ({ alignment = 'start', children }: Props) => {
   const kids = React.Children.map(children, (child) => {
     if (typeof child === 'string' || typeof child === 'number') return child
 
@@ -13,5 +17,9 @@ export const InputGroup = ({ children }: React.Props<any>) => {
     return React.cloneElement(child, props)
   })
 
-  return <Flex className="input-group">{kids}</Flex>
+  return (
+    <Flex alignment={alignment} className="input-group">
+      {kids}
+    </Flex>
+  )
 }

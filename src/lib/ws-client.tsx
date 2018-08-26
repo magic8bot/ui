@@ -40,6 +40,15 @@ class WsClient {
     this.actions.set(actionName, actionFn)
   }
 
+  public once(actionName: string, actionFn: (payload: Payload) => void) {
+    if (this.actions.has(actionName)) return
+
+    this.actions.set(actionName, (payload) => {
+      this.actions.delete(actionName)
+      actionFn(payload)
+    })
+  }
+
   private handleMessage = ({ data }: MessageEvent) => {
     const body = data.toString()
     logStore.addRec(`received ${body}`)

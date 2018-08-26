@@ -29,7 +29,7 @@ export class Button extends Component<Props> {
     const btnClassName = `${className} button button-${color} button-${size}` + (!isOutline ? '' : ' button-outline')
 
     const props: Record<string, any> = { className: btnClassName, type, disabled, onClick }
-    if (typeof tabindex !== 'undefined') props.tabindex = tabindex
+    if (typeof tabindex !== 'undefined') props.tabIndex = tabindex
 
     return <button {...props}>{children}</button>
   }

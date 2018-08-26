@@ -104,12 +104,22 @@ export class AppStore {
     this.config.exchanges.push({ exchange, strategies: [], tradePollInterval: 500, isNew: true })
   }
 
-  public saveExchange(exchangeConfig: ExchangeConfig) {
+  public async saveExchange(exchangeConfig: ExchangeConfig) {
     wsClient.broadcast('add-exchange', exchangeConfig)
+    const rand = Math.random()
+
+    wsClient.once('add-exchange', (payload) => {
+      console.log(rand, payload)
+    })
   }
 
   public updateExchange(exchangeConfig: ExchangeConfig) {
     wsClient.broadcast('update-exchange', exchangeConfig)
+  }
+
+  public removeExchange(name: string) {
+    const idx = this.config.exchanges.findIndex(({ exchange }) => exchange === name)
+    this.config.exchanges.splice(idx, 1)
   }
 }
 

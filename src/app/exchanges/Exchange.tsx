@@ -2,8 +2,8 @@ import React, { Component } from 'react'
 import { observer, inject } from 'mobx-react'
 
 import { Field, FieldNode, FieldRoot, AppStore } from '../app.store'
-import { Card, Title, Subtext, Input, Flex, Button } from '../../ui'
-import { observable, autorun, reaction } from 'mobx'
+import { Card, Title, Subtext, Input, Button, Modal, Warntext, InputGroup } from '../../ui'
+import { observable } from 'mobx'
 
 interface Props {
   name: string
@@ -23,6 +23,9 @@ export class Exchange extends Component<Props> {
   @observable
   private isNew = true
 
+  @observable
+  private modalOpen = false
+
   private saveTimeout: number = null
 
   constructor(props) {
@@ -30,8 +33,6 @@ export class Exchange extends Component<Props> {
 
     this.values.tradePollInterval = this.props.values.tradePollInterval
     this.isNew = this.props.isNew
-
-    reaction(() => Object.entries(this.values), () => this.updateValues())
   }
 
   public render() {
@@ -43,8 +44,9 @@ export class Exchange extends Component<Props> {
         <Subtext>{this.props.description}</Subtext>
         <form onSubmit={this.saveExchange}>
           {this.renderFields(this.props.fields)}
-          {this.renderButton()}
+          {this.renderButtons()}
         </form>
+        {this.renderModal()}
       </Card>
     )
   }
@@ -82,6 +84,26 @@ export class Exchange extends Component<Props> {
     )
   }
 
+  private renderModal() {
+    const onDismiss = () => {
+      this.modalOpen = false
+    }
+
+    const onSuccess = () => {
+      this.modalOpen = false
+      this.props.appStore.removeExchange(this.props.name)
+    }
+
+    const props = { onDismiss, onSuccess, isOpen: this.modalOpen }
+
+    return (
+      <Modal {...props}>
+        <Title>Are you sure?</Title>
+        <Warntext>This will delete the whole thing. All of it.</Warntext>
+      </Modal>
+    )
+  }
+
   private saveExchange = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
 
@@ -113,13 +135,33 @@ export class Exchange extends Component<Props> {
     }, {})
   }
 
-  private renderButton() {
-    if (!this.isNew) return null
+  private renderButtons() {
+    const buttons = [
+      {
+        type: 'button',
+        color: 'danger',
+        text: this.isNew ? 'Cancel' : 'Delete',
+        onClick: this.isNew ? () => this.props.appStore.removeExchange(this.props.name) : () => (this.modalOpen = true),
+      },
+      {
+        type: 'submit',
+        color: 'success',
+        text: this.isNew ? 'Authorize' : 'Save',
+        onClick: this.isNew ? () => null : this.updateValues(),
+      },
+    ]
 
     return (
-      <Flex alignment="end">
-        <Button type="submit">Authorize</Button>
-      </Flex>
+      <InputGroup alignment="end">
+        {buttons.map(({ type, color, text, onClick }) => {
+          const props: any = { type, color, onClick }
+          return (
+            <Button key={color} {...props} isOutline>
+              {text}
+            </Button>
+          )
+        })}
+      </InputGroup>
     )
   }
 }
