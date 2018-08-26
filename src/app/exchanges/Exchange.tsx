@@ -89,9 +89,9 @@ export class Exchange extends Component<Props> {
       this.modalOpen = false
     }
 
-    const onSuccess = () => {
+    const onSuccess = async () => {
+      await this.props.appStore.deleteExchange(this.props.name)
       this.modalOpen = false
-      this.props.appStore.removeExchange(this.props.name)
     }
 
     const props = { onDismiss, onSuccess, isOpen: this.modalOpen }
@@ -144,10 +144,10 @@ export class Exchange extends Component<Props> {
         onClick: this.isNew ? () => this.props.appStore.removeExchange(this.props.name) : () => (this.modalOpen = true),
       },
       {
-        type: 'submit',
+        type: this.isNew ? 'submit' : 'button',
         color: 'success',
         text: this.isNew ? 'Authorize' : 'Save',
-        onClick: this.isNew ? () => null : this.updateValues(),
+        onClick: this.isNew ? () => null : () => this.updateValues(),
       },
     ]
 

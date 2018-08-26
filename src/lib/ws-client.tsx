@@ -40,12 +40,15 @@ class WsClient {
     this.actions.set(actionName, actionFn)
   }
 
-  public once(actionName: string, actionFn: (payload: Payload) => void) {
+  public async once(actionName: string, actionFn: (payload: Payload) => void) {
     if (this.actions.has(actionName)) return
 
-    this.actions.set(actionName, (payload) => {
-      this.actions.delete(actionName)
-      actionFn(payload)
+    return new Promise((resolve) => {
+      this.actions.set(actionName, async (payload) => {
+        this.actions.delete(actionName)
+        await actionFn(payload)
+        resolve()
+      })
     })
   }
 

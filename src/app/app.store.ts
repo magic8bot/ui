@@ -117,6 +117,15 @@ export class AppStore {
     wsClient.broadcast('update-exchange', exchangeConfig)
   }
 
+  public async deleteExchange(name: string) {
+    wsClient.broadcast('delete-exchange', { exchange: name })
+
+    await wsClient.once('delete-exchange', () => {
+      const idx = this.config.exchanges.findIndex(({ exchange }) => exchange === name)
+      this.config.exchanges.splice(idx, 1)
+    })
+  }
+
   public removeExchange(name: string) {
     const idx = this.config.exchanges.findIndex(({ exchange }) => exchange === name)
     this.config.exchanges.splice(idx, 1)
