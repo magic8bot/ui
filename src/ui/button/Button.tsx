@@ -9,6 +9,7 @@ interface Props {
   color?: 'primary' | 'success' | 'danger'
   type?: 'button' | 'reset' | 'submit'
   onClick?: () => void
+  tabindex?: number
   className?: string
 }
 
@@ -23,11 +24,12 @@ export class Button extends Component<Props> {
   }
 
   public render() {
-    const { size, isDisabled: disabled, isOutline, color, type, onClick, className, children } = this.props
+    const { size, isDisabled: disabled, isOutline, color, type, onClick, tabindex, className, children } = this.props
 
     const btnClassName = `${className} button button-${color} button-${size}` + (!isOutline ? '' : ' button-outline')
 
-    const props = { className: btnClassName, type, disabled, onClick }
+    const props: Record<string, any> = { className: btnClassName, type, disabled, onClick }
+    if (typeof tabindex !== 'undefined') props.tabindex = tabindex
 
     return <button {...props}>{children}</button>
   }

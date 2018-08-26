@@ -34,25 +34,25 @@
   &.button-lg
     padding 1.5 3rem
 
-  colors = primary success danger
-  props = background-color border-color color
+  $colors = primary success danger
+  $props = background-color border-color color
 
-  for color in colors
-    &.button-{color}
-    &.button-{color}[disabled]:hover
-      for prop in props
-        {prop}: $button[color][prop]
+  for $color in $colors
+    &.button-{$color}
+    &.button-{$color}[disabled]:hover
+      for $prop in $props
+        {$prop}: $button[$color][$prop]
 
-    &.button-{color}:hover
-      for prop in props
-        {prop}: $button[color].hover[prop]
+    &.button-{$color}:hover
+      for $prop in $props
+        {$prop}: $button[$color].hover[$prop]
 
     &.button-outline
-      &.button-{color},
-      &.button-{color}[disabled]:hover
-        for prop in props
-          {prop}: $button.outline[color][prop]
+      &.button-{$color},
+      &.button-{$color}[disabled]:hover
+        for $prop in $props
+          {$prop}: $button.outline[$color][$prop]
 
-      &.button-{color}:hover
-        for prop in props
-          {prop}: $button.outline[color].hover[prop]
+      &.button-{$color}:hover
+        for $prop in $props
+          {$prop}: $button.outline[$color].hover[$prop]

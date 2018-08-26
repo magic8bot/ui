@@ -52,7 +52,7 @@ export class Input extends Component<Props> {
     return (
       <InputGroup>
         <input type={type} autoComplete="off" value={this.value} required={this.props.required} onChange={this.handleChange} />
-        <Button color={color} isOutline onClick={onClick}>
+        <Button color={color} isOutline onClick={onClick} tabindex={-1}>
           <FontAwesomeIcon icon={icon} />
         </Button>
       </InputGroup>
