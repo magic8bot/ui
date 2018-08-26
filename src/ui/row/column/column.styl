@@ -1,0 +1,47 @@
+@import '../../../styles/vars'
+
+.row .column
+  display block
+  flex 1 1 auto
+  max-width 100%
+  width 100%
+
+  & + .column
+    margin-left $border-width
+
+  $widths = 10 20 25 50 75 80 90
+  for $width in $widths
+    &.column-offset-{$width}
+      margin-left: "%s%" % $width
+
+    &.column-{$width}
+      flex: 0 0 "%s%" % $width
+      max-width: "%s%" % $width
+
+  &.column-offset-33, 
+  &.column-offset-34
+    margin-left 33.3333%
+
+  &.column-offset-66, 
+  &.column-offset-67
+    margin-left 66.6666%
+
+  &.column-33, 
+  &.column-34
+    flex 0 0 33.3333%
+    max-width 33.3333%
+
+  &.column-66, 
+  &.column-67
+    flex 0 0 66.6666%
+    max-width 66.6666%
+
+  .column-top
+    align-self flex-start
+
+  .column-bottom
+    align-self flex-end
+
+  .column-center
+    grid-row-align center
+    align-self center

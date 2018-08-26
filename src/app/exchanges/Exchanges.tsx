@@ -7,6 +7,7 @@ import { faExchangeAlt } from '@fortawesome/free-solid-svg-icons'
 import { AppStore } from '../app.store'
 import { Flex, Card, Title, Subtext, TextWithIcon, Warntext, Button, InputGroup, Select, Infotext } from '../../ui'
 import { Exchange } from './Exchange'
+import { Row, Column } from '../../ui/row'
 
 interface Props {
   appStore?: AppStore
@@ -69,13 +70,13 @@ export class Exchanges extends Component<Props> {
     const exchanges = this.props.appStore.config.exchanges.map(({ exchange: name, ...values }) => ({ name, ...this.props.appStore.exchanges[name], ...values }))
 
     return (
-      <div className="row row-no-padding row-wrap">
+      <Row isWrap noPadding>
         {exchanges.map(({ name, description, fields, isNew, ...values }, idx) => (
-          <div key={idx} className="column column-25">
+          <Column key={idx} size={25}>
             <Exchange name={name} description={description} fields={fields} isNew={isNew} values={values} />
-          </div>
+          </Column>
         ))}
-      </div>
+      </Row>
     )
   }
 
