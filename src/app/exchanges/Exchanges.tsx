@@ -86,11 +86,7 @@ export class Exchanges extends Component<Props> {
     return (
       <Card>
         <Infotext>
-          Warning: Modifying any setting for an exchange{' '}
-          <i>
-            <b>will stop</b>
-          </i>{' '}
-          all trade syncs, tickers, and strategies. It's up to you to manually restart them.
+          <b>Info:</b> Modifying any setting for an exchange <i>will stop</i> all trade syncs, tickers, and strategies. It's up to you to manually restart them.
         </Infotext>
       </Card>
     )
