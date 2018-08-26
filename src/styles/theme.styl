@@ -27,121 +27,6 @@ blockquote
   *:last-child
     margin-bottom 0
 
-.button
-  background-color $buttonBackground
-  border 0.1rem solid $buttonBorder
-  border-radius .4rem
-  color $buttonText
-  cursor pointer
-  display inline-block
-  font-size 1.1rem
-  font-weight 700
-  height 4rem
-  letter-spacing .1rem
-  line-height 4rem
-  padding 0 1.5rem
-  text-align center
-  text-decoration none
-  text-transform uppercase
-  transition all 100ms ease-in
-  white-space nowrap
-
-.button:focus,
-.button:hover
-  background-color $buttonBackgroundHover
-  border-color $buttonBorderHover
-  color $buttonTextHover
-  outline 0
-
-.button[disabled]
-  cursor not-allowed
-  opacity .5
-
-.button[disabled]:focus,
-.button[disabled]:hover
-  color $buttonTextDisabled
-  background-color $buttonBackgroundDisabled
-  border-color $buttonBackgroundDisabled
-
-.button.button-outline
-  background-color transparent
-  color $buttonOutlineText
-
-.button.button-outline:focus,
-.button.button-outline:hover
-  background-color transparent
-  border-color $buttonOutlineBorderHover
-  color $buttonOutlineTextHover
-
-.button.button-outline[disabled]:focus,
-.button.button-outline[disabled]:hover
-  border-color inherit
-  color $buttonOutlineTextDisabled
-
-.button.button-clear
-  background-color transparent
-  border-color transparent
-  color $buttonClearText
-
-.button.button-clear:focus,
-.button.button-clear:hover
-  background-color transparent
-  border-color transparent
-  color $buttonClearTextHover
-
-.button.button-clear[disabled]:focus,
-.button.button-clear[disabled]:hover
-  color $buttonClearTextDisabled
-
-.button.button-success.button-outline
-  background-color transparent
-  border-color $lightestGrey
-  color $buttonSuccessOutlineText
-
-.button.button-success.button-outline:focus,
-.button.button-success.button-outline:hover
-  background-color transparent
-  border-color $buttonSuccessOutlineBorderHover
-  color $buttonSuccessOutlineTextHover
-
-.button.button-success.button-outline[disabled]:focus,
-.button.button-success.button-outline[disabled]:hover
-  border-color inherit
-  color $buttonSuccessOutlineTextDisabled
-
-.button.button-danger.button-outline
-  background-color transparent
-  border-color $lightestGrey
-  color $buttonDangerOutlineText
-
-.button.button-danger.button-outline:focus,
-.button.button-danger.button-outline:hover
-  background-color transparent
-  border-color $buttonDangerOutlineBorderHover
-  color $buttonDangerOutlineTextHover
-
-.button.button-danger.button-outline[disabled]:focus,
-.button.button-danger.button-outline[disabled]:hover
-  border-color inherit
-  color $buttonDangerOutlineTextDisabled
-
-.input-group
-  .input:first-child,
-  .input:first-child  .react-select__control
-    border-top-left-radius 4px
-    border-bottom-left-radius 4px
-
-  .input:last-child,
-  .input:last-child .react-select__control
-    border-top-right-radius 4px
-    border-bottom-right-radius 4px
-    border-right-width 1px
-
-  .input,
-  .input .react-select__control
-    border-radius 0
-    border-right-width 0
-
 code
   background $codeBackground
   border-radius .4rem
@@ -165,13 +50,6 @@ hr
   border-top 0.1rem solid $hrColor
   margin 3.0rem 0
 
-input[type='email'],
-input[type='number'],
-input[type='password'],
-input[type='search'],
-input[type='tel'],
-input[type='text'],
-input[type='url'],
 textarea
   -webkit-appearance none
   appearance none
@@ -183,32 +61,16 @@ textarea
   box-shadow none
   box-sizing inherit
   height 4rem
+  min-height 6.5rem
   padding .6rem 1.0rem
   width 100%
   font-size 1.4rem
   font-weight 100
 
-input[type='email']:focus,
-input[type='number']:focus,
-input[type='password']:focus,
-input[type='search']:focus,
-input[type='tel']:focus,
-input[type='text']:focus,
-input[type='url']:focus,
-textarea:focus,
-input[type='email']:hover,
-input[type='number']:hover,
-input[type='password']:hover,
-input[type='search']:hover,
-input[type='tel']:hover,
-input[type='text']:hover,
-input[type='url']:hover,
-textarea:hover
-  border-color $inputBorderFocus
-  outline 0
-
-textarea
-  min-height 6.5rem
+  &:hover,
+  &:focus
+    border-color $inputBorderFocus
+    outline 0
 
 label,
 legend
@@ -369,22 +231,18 @@ ol
 ul
   list-style circle inside
 
-.button,
-button,
 dd,
 dt,
 li
   margin-bottom 1.0rem
 
 fieldset,
-input,
 textarea
   margin-bottom 1.5rem
 
 blockquote,
 dl,
 figure,
-form,
 ol,
 p,
 pre,
@@ -469,4 +327,3 @@ img
 .float-right
   float right
 
-@import './react-select'

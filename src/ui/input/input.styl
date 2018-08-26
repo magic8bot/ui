@@ -1,0 +1,29 @@
+@import '../../styles/colors'
+
+input
+  &[type='email'],
+  &[type='number'],
+  &[type='password'],
+  &[type='search'],
+  &[type='tel'],
+  &[type='text'],
+  &[type='url']
+    appearance none
+    background-color $inputBackground
+    border 0.1rem solid $inputBorder
+    color $inputText
+    transition border-color 200ms linear
+    border-radius .4rem
+    box-shadow none
+    box-sizing inherit
+    height 4rem
+    margin-bottom 1.5rem
+    padding .6rem 1.0rem
+    width 100%
+    font-size 1.4rem
+    font-weight 100
+
+    &:focus,
+    &hover
+      border-color $inputBorderFocus
+      outline 0

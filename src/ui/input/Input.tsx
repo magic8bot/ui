@@ -1,10 +1,15 @@
+import './input.styl'
+
 import React, { Component } from 'react'
 import { observable, action } from 'mobx'
 import { observer } from 'mobx-react'
-import { Helptext } from '../helptext'
-import { Flex } from '../flex'
+
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEye, faEyeSlash } from '@fortawesome/free-regular-svg-icons'
+
+import { Button } from '../button'
+import { Helptext } from '../helptext'
+import { InputGroup } from '../input-group'
 
 interface Props {
   initValue: string
@@ -40,17 +45,17 @@ export class Input extends Component<Props> {
 
   private renderPassword() {
     const type = this.hidePassword ? 'password' : 'text'
-    const className = 'input button button-outline ' + (!this.hidePassword ? 'button-success' : 'button-danger')
+    const color = !this.hidePassword ? 'success' : 'danger'
     const onClick = () => (this.hidePassword = !this.hidePassword)
     const icon = !this.hidePassword ? faEye : faEyeSlash
 
     return (
-      <Flex className="input-group">
-        <input className="input" type={type} autoComplete="off" value={this.value} required={this.props.required} onChange={this.handleChange} />
-        <div className={className} onClick={onClick}>
+      <InputGroup>
+        <input type={type} autoComplete="off" value={this.value} required={this.props.required} onChange={this.handleChange} />
+        <Button color={color} isOutline onClick={onClick}>
           <FontAwesomeIcon icon={icon} />
-        </div>
-      </Flex>
+        </Button>
+      </InputGroup>
     )
   }
 

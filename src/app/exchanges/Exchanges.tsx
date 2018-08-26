@@ -2,11 +2,10 @@ import React, { Component } from 'react'
 import { reaction, observable } from 'mobx'
 import { inject, observer } from 'mobx-react'
 
-import Select from 'react-select'
 import { faExchangeAlt } from '@fortawesome/free-solid-svg-icons'
 
 import { AppStore } from '../app.store'
-import { Flex, Card, Title, Subtext, TextWithIcon, Input, Warntext } from '../../ui'
+import { Flex, Card, Title, Subtext, TextWithIcon, Warntext, Button, InputGroup, Select } from '../../ui'
 import { Exchange } from './Exchange'
 
 interface Props {
@@ -40,20 +39,13 @@ export class Exchanges extends Component<Props> {
           </Title>
           <Subtext>Add and configure your exchanges.</Subtext>
 
-          <Flex className="input-group">
-            <Select
-              className="input react-select-container"
-              classNamePrefix="react-select"
-              isSearchable={false}
-              options={options}
-              value={this.selectedExchange}
-              onChange={this.selectExchange}
-            />
+          <InputGroup>
+            <Select options={options} value={this.selectedExchange} onChange={this.selectExchange} />
 
-            <button className="input button" disabled={!this.selectedExchange} onClick={this.addExchange}>
+            <Button isDisabled={!this.selectedExchange} onClick={this.addExchange}>
               Add Exchange
-            </button>
-          </Flex>
+            </Button>
+          </InputGroup>
         </Card>
 
         {this.renderWarning()}

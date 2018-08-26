@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { observer, inject } from 'mobx-react'
 
 import { Field, FieldNode, FieldRoot, AppStore } from '../app.store'
-import { Card, Title, Subtext, Input, Flex } from '../../ui'
+import { Card, Title, Subtext, Input, Flex, Button } from '../../ui'
 import { observable, autorun, reaction } from 'mobx'
 
 interface Props {
@@ -118,9 +118,7 @@ export class Exchange extends Component<Props> {
 
     return (
       <Flex alignment="end">
-        <button className="button" type="submit">
-          Authorize
-        </button>
+        <Button type="submit">Authorize</Button>
       </Flex>
     )
   }

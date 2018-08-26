@@ -1,0 +1,58 @@
+@import '../../styles/button'
+
+.button
+  border-width 0.1rem
+  border-style solid
+  border-radius .4rem
+  cursor pointer
+  display inline-block
+  font-size 1.1rem
+  font-weight 700
+  height 4rem
+  letter-spacing .1rem
+  line-height 4rem
+  margin-bottom 1.0rem
+  text-align center
+  text-decoration none
+  text-transform uppercase
+  transition all 100ms ease-in
+  white-space nowrap
+
+  &:focus
+    outline 0
+
+  &[disabled]
+    cursor not-allowed
+    opacity .5
+
+  &.button-sm
+    padding 0 1rem
+
+  &.button-md
+    padding 0 1.5rem
+
+  &.button-lg
+    padding 1.5 3rem
+
+  colors = primary success danger
+  props = background-color border-color color
+
+  for color in colors
+    &.button-{color}
+    &.button-{color}[disabled]:hover
+      for prop in props
+        {prop}: $button[color][prop]
+
+    &.button-{color}:hover
+      for prop in props
+        {prop}: $button[color].hover[prop]
+
+    &.button-outline
+      &.button-{color},
+      &.button-{color}[disabled]:hover
+        for prop in props
+          {prop}: $button.outline[color][prop]
+
+      &.button-{color}:hover
+        for prop in props
+          {prop}: $button.outline[color].hover[prop]
