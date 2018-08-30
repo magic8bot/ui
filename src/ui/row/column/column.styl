@@ -5,18 +5,17 @@
   flex 1 1 auto
   max-width 100%
   width 100%
-
-  & + .column
-    margin-left $border-width
+  padding 0 5px
+  margin-right $border-width
 
   $widths = 10 20 25 50 75 80 90
   for $width in $widths
     &.column-offset-{$width}
-      margin-left: "%s%" % $width
+      margin-left: "calc(%s% - %s)" % ($width $border-width)
 
     &.column-{$width}
-      flex: 0 0 "%s%" % $width
-      max-width: "%s%" % $width
+      flex: 0 0 "calc(%s% - %s)" % ($width $border-width)
+      max-width: "calc(%s% - %s)" % ($width $border-width)
 
   &.column-offset-33, 
   &.column-offset-34
@@ -35,6 +34,10 @@
   &.column-67
     flex 0 0 66.6666%
     max-width 66.6666%
+
+  &.column-100
+    flex 0 0 100
+    max-width 100
 
   .column-top
     align-self flex-start

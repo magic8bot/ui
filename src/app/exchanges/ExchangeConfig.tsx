@@ -16,7 +16,7 @@ interface Props {
 
 @inject('appStore')
 @observer
-export class Exchange extends Component<Props> {
+export class ExchangeConfig extends Component<Props> {
   @observable
   public values: Record<string, any> = {}
 
@@ -25,8 +25,6 @@ export class Exchange extends Component<Props> {
 
   @observable
   private modalOpen = false
-
-  private saveTimeout: number = null
 
   constructor(props) {
     super(props)
@@ -109,6 +107,7 @@ export class Exchange extends Component<Props> {
 
     const values: any = this.getValues()
     this.isNew = false
+    this.props.appStore.config.exchanges.find(({ exchange }) => exchange === this.props.name).isNew = false
 
     this.props.appStore.saveExchange({ exchange: this.props.name, ...values })
   }
@@ -120,12 +119,8 @@ export class Exchange extends Component<Props> {
 
     if (!Object.keys(values).length) return
 
-    window.clearTimeout(this.saveTimeout)
-
-    this.saveTimeout = window.setTimeout(() => {
-      this.props.appStore.updateExchange({ exchange: this.props.name, ...values })
-      this.values = {}
-    }, 2000)
+    this.props.appStore.updateExchange({ exchange: this.props.name, ...values })
+    this.values = {}
   }
 
   private getValues(): any {

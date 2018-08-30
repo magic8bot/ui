@@ -12,10 +12,11 @@ interface Props extends React.Props<any> {
 export const Link = inject('routing')(
   observer(({ to, routing, children }: Props) => {
     const { pathname } = routing.location
-    const isActive = pathname === to
+    const isActive = pathname.includes(to)
+    const shouldRoute = pathname !== to
 
     return (
-      <a className={`link ${isActive ? 'active' : ''}`} onClick={() => !isActive && routing.push(to)}>
+      <a className={`link ${isActive ? 'active' : ''}`} onClick={() => shouldRoute && routing.push(to)}>
         {children}
       </a>
     )

@@ -1,10 +1,9 @@
 import React from 'react'
+import { ucFirst } from '../../util'
 
 interface Props {
   path: string
 }
-
-const ucFirst = (str) => (!str ? '' : `${str[0].toUpperCase()}${str.slice(1)}`)
 
 export const Breadcrumbs = ({ path }: Props) => {
   const parts = path.split('/').filter(Boolean)

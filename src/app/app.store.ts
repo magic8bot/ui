@@ -8,6 +8,7 @@ interface FieldBase {
 type FieldNodeBase = FieldBase & {
   prettyName: string
   description: string
+  default?: string | number | boolean
 }
 
 type FieldInput = FieldNodeBase & {
@@ -38,6 +39,14 @@ type ExchangeOptions = Record<
   string,
   {
     fields: Field[]
+    description: string
+  }
+>
+
+type StrategyOptions = Record<
+  string,
+  {
+    fields: FieldInput[]
     description: string
   }
 >
@@ -77,11 +86,19 @@ export class AppStore {
   @observable
   public exchanges: ExchangeOptions = null
   @observable
-  public strategies: string[] = null
+  public strategies: StrategyOptions = null
+  @observable
+  public symbols: Record<string, string[]> = {}
+  @observable
+  public balances: Record<string, Record<string, { total: number }>> = {}
 
   constructor() {
     wsClient.registerAction('get-my-config', (config: Config) => {
       this.config = config
+      config.exchanges.forEach(({ exchange }) => {
+        wsClient.broadcast('get-symbols', { exchange })
+        wsClient.broadcast('get-balance', { exchange })
+      })
     })
 
     wsClient.registerAction('get-exchanges', ({ exchanges }) => {
@@ -90,6 +107,19 @@ export class AppStore {
 
     wsClient.registerAction('get-strategies', ({ strategies }) => {
       this.strategies = strategies
+    })
+
+    wsClient.registerAction('get-symbols', ({ exchange, symbols }) => {
+      this.symbols[exchange] = symbols
+    })
+
+    wsClient.registerAction('get-balance', ({ exchange, balance }) => {
+      this.balances[exchange] = Object.entries(balance).reduce((acc, [key, value]) => {
+        // @ts-ignore
+        if (!value.total) return acc
+        acc[key] = value
+        return acc
+      }, {})
     })
   }
 
@@ -104,13 +134,8 @@ export class AppStore {
     this.config.exchanges.push({ exchange, strategies: [], tradePollInterval: 500, isNew: true })
   }
 
-  public async saveExchange(exchangeConfig: ExchangeConfig) {
+  public saveExchange(exchangeConfig: ExchangeConfig) {
     wsClient.broadcast('add-exchange', exchangeConfig)
-    const rand = Math.random()
-
-    wsClient.once('add-exchange', (payload) => {
-      console.log(rand, payload)
-    })
   }
 
   public updateExchange(exchangeConfig: ExchangeConfig) {
@@ -129,6 +154,29 @@ export class AppStore {
   public removeExchange(name: string) {
     const idx = this.config.exchanges.findIndex(({ exchange }) => exchange === name)
     this.config.exchanges.splice(idx, 1)
+  }
+
+  @action
+  public addStrategy(exchange: string, strategyConfig: StrategyConfig) {
+    const exchangeConfig = this.config.exchanges.find(({ exchange: name }) => name === exchange)
+    exchangeConfig.strategies.push({ exchange, ...strategyConfig })
+    wsClient.broadcast('add-strategy', { exchange, ...strategyConfig })
+  }
+
+  public updateStrategy(strategyConfig: StrategyConfig) {
+    wsClient.broadcast('update-strategy', strategyConfig)
+  }
+
+  public async deleteStrategy(exchange: string, strategy: string, symbol: string) {
+    wsClient.broadcast('delete-strategy', { exchange, strategy, symbol })
+
+    await wsClient.once('delete-strategy', () => {
+      const exchangeConfig = this.config.exchanges.find(({ exchange: name }) => name === exchange)
+      const idx = exchangeConfig.strategies.findIndex(({ strategy: strategyName, symbol: symbolName }) => strategyName === strategy && symbolName === symbol)
+      setTimeout(() => {
+        exchangeConfig.strategies.splice(idx, 1)
+      }, 20)
+    })
   }
 }
 

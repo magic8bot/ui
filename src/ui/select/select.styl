@@ -17,7 +17,6 @@
       .react-select__placeholder,
       .react-select__single-value
         color $brand
-    // .react-select__indicators
 
   .react-select__menu
     .react-select__menu-list
@@ -27,7 +26,23 @@
 
         &:hover,
         &.react-select__option--is-focused
-          background-color lighten($brand, 15%)
+          background-color lighten($brand, 65%)
 
         &.react-select__option--is-selected
           background-color $brand
+
+  &.react-select--is-disabled
+    .react-select__control
+      border-color $fadedText
+
+      .react-select__value-container
+        .react-select__placeholder,
+        .react-select__single-value
+          color $fadedText
+
+      .react-select__indicators
+        .react-select__indicator-separator
+          background-color $fadedText
+
+        .react-select__dropdown-indicator
+          color $fadedText
