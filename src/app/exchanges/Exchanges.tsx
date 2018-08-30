@@ -6,7 +6,7 @@ import { faExchangeAlt } from '@fortawesome/free-solid-svg-icons'
 
 import { AppStore } from '../app.store'
 import { Card, Button, InputGroup, Select, Infotext, Page } from '../../ui'
-import { ExchangeConfig } from './ExchangeConfig'
+import { ExchangeCard } from './exchange-card'
 import { Row, Column } from '../../ui/row'
 
 interface Props {
@@ -72,7 +72,7 @@ export class Exchanges extends Component<Props> {
       <Row isWrap noPadding>
         {exchanges.map(({ name, description, fields, isNew, ...values }, idx) => (
           <Column key={idx} size={25}>
-            <ExchangeConfig name={name} description={description} fields={fields} isNew={isNew} values={values} />
+            <ExchangeCard name={name} description={description} fields={fields} isNew={isNew} values={values} />
           </Column>
         ))}
       </Row>

@@ -4,7 +4,6 @@
     "exclude": ["./legacy"]
   },
   "rules": {
-    "no-unnecessary-type-assertion": true,
     "no-console": false,
 
     "array-type": [true, "array"],
@@ -34,7 +33,6 @@
     "no-switch-case-fall-through": true,
     "no-this-assignment": false,
     "no-trailing-whitespace": [true, "ignore-template-strings"],
-    "no-unnecessary-qualifier": true,
     "no-var-keyword": true,
     "no-var-requires": false,
     "object-literal-shorthand": true,

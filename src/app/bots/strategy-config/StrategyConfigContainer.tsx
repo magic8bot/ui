@@ -1,12 +1,12 @@
 import React, { Component } from 'react'
 import { inject, observer } from 'mobx-react'
 
-import { AppStore } from '../app.store'
+import { AppStore } from '../../app.store'
 import { RouterStore } from 'mobx-react-router'
 import { faChevronLeft } from '@fortawesome/free-solid-svg-icons'
-import { Strategy } from './Strategy'
+import { StrategyConfig } from './StrategyConfig'
 import { match } from 'react-router'
-import { Page } from '../../ui'
+import { Page } from '../../../ui'
 
 interface Params {
   exchange: string
@@ -22,7 +22,7 @@ interface Props {
 
 @inject('appStore', 'routing')
 @observer
-export class StrategyConfig extends Component<Props> {
+export class StrategyConfigContainer extends Component<Props> {
   private exchange: string = null
   private strategy: string = null
   private symbol: string = null
@@ -55,6 +55,6 @@ export class StrategyConfig extends Component<Props> {
     const { fields } = this.props.appStore.strategies[strategy]
     const props = { exchange, strategy, symbol, fields, values }
 
-    return <Strategy {...props} />
+    return <StrategyConfig {...props} />
   }
 }

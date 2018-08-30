@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 import { observer, inject } from 'mobx-react'
 
-import { Field, FieldNode, FieldRoot, AppStore } from '../app.store'
-import { Card, Title, Subtext, Input, Button, Modal, Warntext, InputGroup } from '../../ui'
+import { Field, FieldNode, FieldRoot, AppStore } from '../../app.store'
+import { Card, Title, Subtext, Input, Button, Modal, Warntext, InputGroup } from '../../../ui'
 import { observable } from 'mobx'
 
 interface Props {
@@ -16,7 +16,7 @@ interface Props {
 
 @inject('appStore')
 @observer
-export class ExchangeConfig extends Component<Props> {
+export class ExchangeCard extends Component<Props> {
   @observable
   public values: Record<string, any> = {}
 

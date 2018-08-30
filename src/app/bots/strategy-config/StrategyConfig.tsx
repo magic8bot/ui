@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
 import { observer, inject } from 'mobx-react'
 
-import { Field, FieldNode, AppStore } from '../app.store'
-import { Card, Title, Subtext, Input, Button, Modal, Warntext, InputGroup, TitleCard } from '../../ui'
+import { Field, FieldNode, AppStore } from '../../app.store'
+import { Title, Input, Button, Modal, Warntext, InputGroup, TitleCard } from '../../../ui'
 import { observable } from 'mobx'
-import { Row, Column } from '../../ui/row'
-import { RouterStore } from '../router.store'
+import { Row, Column } from '../../../ui/row'
+import { RouterStore } from '../../router.store'
 
 interface Props {
   exchange: string
@@ -19,7 +19,7 @@ interface Props {
 
 @inject('appStore', 'routing')
 @observer
-export class Strategy extends Component<Props> {
+export class StrategyConfig extends Component<Props> {
   @observable
   public values: Record<string, any> = {}
 

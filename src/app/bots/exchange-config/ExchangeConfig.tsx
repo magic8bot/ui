@@ -1,12 +1,10 @@
 import React, { Component } from 'react'
 import { inject, observer } from 'mobx-react'
 
-import { AppStore, StrategyConfig } from '../app.store'
-import { Flex, Card, Title, Balance, Page, InputGroup, Button, Select, TitleCard, Link } from '../../ui'
+import { AppStore, StrategyConfig } from '../../app.store'
+import { Flex, Card, Title, Balance, Page, InputGroup, Button, Select, TitleCard, Link } from '../../../ui'
 import { RouterStore } from 'mobx-react-router'
 import { faChevronLeft } from '@fortawesome/free-solid-svg-icons'
-import { Column } from '../../ui/row'
-import { Strategy } from './Strategy'
 import { observable } from 'mobx'
 import { match } from 'react-router'
 
@@ -22,7 +20,7 @@ interface Props {
 
 @inject('appStore', 'routing')
 @observer
-export class BotConfig extends Component<Props> {
+export class ExchangeConfig extends Component<Props> {
   @observable
   private selectedSymbol: {
     value: string

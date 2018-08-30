@@ -29,6 +29,7 @@ export class Sidebar extends Component {
             <SidebarItem text="Calendar" icon={faCalendarAlt} />
           </Link>
         </div>
+        <div className="sidebar-spacer" />
         <div>
           <Link to="/account">
             <SidebarItem text="Account" icon={faUser} />

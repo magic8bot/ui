@@ -1,13 +1,11 @@
 import React, { Component } from 'react'
-import { observable } from 'mobx'
 import { inject, observer } from 'mobx-react'
 
 import { faRobot } from '@fortawesome/free-solid-svg-icons'
 
-import { AppStore, ExchangeConfig, StrategyConfig } from '../app.store'
-import { Flex, Card, Title, Subtext, InputGroup, Button, Select, Balance, Page, TitleCard, Link } from '../../ui'
-import { Row, Column } from '../../ui/row'
-import { Strategy } from './Strategy'
+import { AppStore } from '../app.store'
+import { Page } from '../../ui'
+import { BotCard } from './bot-card'
 
 interface Props {
   appStore?: AppStore
@@ -32,25 +30,6 @@ export class Bots extends Component<Props> {
 
     return Object.keys(this.props.appStore.exchanges)
       .sort((a, b) => (a > b ? 1 : -1))
-      .map((exchange) => this.renderExchange(exchange))
-  }
-
-  private renderExchange(exchange: string) {
-    const exchangeConfig = this.props.appStore.config.exchanges.find((ex) => ex.exchange === exchange)
-    const subtitle = this.props.appStore.exchanges[exchange].description
-    const isEnabled = exchangeConfig && !exchangeConfig.isNew
-    const className = isEnabled ? '' : 'faded'
-
-    return (
-      <TitleCard key={exchange} titleSize={2} title={exchange} subtitle={subtitle} className={className}>
-        {isEnabled && (
-          <Flex>
-            <Link to={`/bots/${exchange}`}>
-              <Button isOutline>Edit Bot</Button>
-            </Link>
-          </Flex>
-        )}
-      </TitleCard>
-    )
+      .map((exchange) => <BotCard key={exchange} exchange={exchange} />)
   }
 }
