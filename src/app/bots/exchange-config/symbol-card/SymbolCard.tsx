@@ -1,10 +1,8 @@
-import './symbol-card.styl'
-
 import React, { Component } from 'react'
 import { inject, observer } from 'mobx-react'
 
 import { AppStore } from '../../../app.store'
-import { Flex, Card, Title, Button, TitleCard, Link, Toggle, Balance } from '../../../../ui'
+import { Flex, Card, Title, Button, TitleCard, Link, Toggle, Wallet } from '../../../../ui'
 import { observable, reaction } from 'mobx'
 import { BotStore } from '../../bot.store'
 import { ExchangeStore } from '../../../exchanges'
@@ -22,6 +20,8 @@ interface Props {
 export class SymbolCard extends Component<Props> {
   @observable
   private isSyncing = false
+  private asset: number
+  private currency: number
 
   constructor(props) {
     super(props)
@@ -67,11 +67,29 @@ export class SymbolCard extends Component<Props> {
     ]
 
     return strategies.map(({ exchange, strategy }, idx) => {
-      if (!this.props.appStore.strategyList.has(strategy)) return null
+      const { appStore, botStore } = this.props
+      if (
+        !appStore.strategyList.has(strategy) ||
+        !botStore.wallets.has(exchange) ||
+        !botStore.wallets.get(exchange).has(symbol) ||
+        !botStore.wallets
+          .get(exchange)
+          .get(symbol)
+          .has(strategy)
+      ) {
+        return null
+      }
 
-      const { description } = this.props.appStore.strategyList.get(strategy)
+      const { asset, currency } = botStore.wallets
+        .get(exchange)
+        .get(symbol)
+        .get(strategy)
+      const [a, c] = symbol.split('/')
+
+      const { description } = appStore.strategyList.get(strategy)
       return (
         <TitleCard key={idx} titleSize={3} title={strategy} subtitle={description}>
+          <Wallet asset={a} currency={c} assetBalance={asset} currencyBalance={currency} />
           <Flex>
             <Link to={`/bots/${exchange}/${symbol.replace('/', '-')}/${strategy}`}>
               <Button isOutline>Edit Strategy</Button>
@@ -87,14 +105,9 @@ export class SymbolCard extends Component<Props> {
 
     const balances = this.props.exchangeStore.balances.get(this.props.exchange)
     const [a, c] = this.props.symbol.split('/')
-    const asset = balances[a].total
-    const currency = balances[c].total
+    this.asset = balances[a].total
+    this.currency = balances[c].total
 
-    return (
-      <div className="symbol-balances">
-        <Balance coin={a} balance={asset} />
-        <Balance coin={c} balance={currency} />
-      </div>
-    )
+    return <Wallet asset={a} currency={c} assetBalance={this.asset} currencyBalance={this.currency} />
   }
 }

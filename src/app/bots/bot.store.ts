@@ -53,13 +53,25 @@ export interface BotConfig {
   wallet: WalletConfig
 }
 
+interface Wallet {
+  asset: number
+  currency: number
+}
+
 export class BotStore {
   @observable
   public bots: Map<string, Map<string, Map<string, BotConfig>>> = new Map()
 
+  @observable
+  public wallets: Map<string, Map<string, Map<string, Wallet>>> = new Map()
+
   public async getStrategies(exchange: string) {
     const bots = await API.get<BotConfig[]>(`/strategy?exchange=${exchange}`)
-    bots.forEach((botConfig) => this.setBot(botConfig))
+    bots.forEach((botConfig) => {
+      this.setBot(botConfig)
+      const { symbol, strategy } = botConfig
+      this.getWallet(exchange, symbol, strategy)
+    })
   }
 
   public async addStrategy(botConfig: BotConfig) {
@@ -91,6 +103,11 @@ export class BotStore {
     )
   }
 
+  public async getWallet(exchange: string, symbol: string, strategy: string) {
+    const wallet = await API.get<Wallet>(`/strategy/wallet?exchange=${exchange}&symbol=${symbol}&strategy=${strategy}`)
+    this.setWallet(exchange, symbol, strategy, wallet)
+  }
+
   @action
   private setBot(botConfig: BotConfig) {
     const { exchange, symbol, strategy } = botConfig
@@ -99,6 +116,15 @@ export class BotStore {
 
     const bots = this.bots.get(exchange).get(symbol)
     bots.set(strategy, botConfig)
+  }
+
+  @action
+  private setWallet(exchange: string, symbol: string, strategy: string, wallet: Wallet) {
+    if (!this.wallets.has(exchange)) this.wallets.set(exchange, new Map())
+    if (!this.wallets.get(exchange).has(symbol)) this.wallets.get(exchange).set(symbol, new Map())
+
+    const bots = this.wallets.get(exchange).get(symbol)
+    bots.set(strategy, wallet)
   }
 }
 
