@@ -2,13 +2,15 @@ import React, { Component } from 'react'
 import { inject, observer } from 'mobx-react'
 
 import { AppStore } from '../../app.store'
-import { Flex, Card, Title, Balance, Page, InputGroup, Button, Select, TitleCard, Link } from '../../../ui'
+import { Flex, Card, Title, Balance, Page, InputGroup, Button, Select } from '../../../ui'
 import { RouterStore } from 'mobx-react-router'
 import { faChevronLeft } from '@fortawesome/free-solid-svg-icons'
 import { observable } from 'mobx'
 import { match } from 'react-router'
 import { ExchangeStore } from '../../exchanges'
 import { BotStore, BotConfig } from '../bot.store'
+import { Row, Column } from '../../../ui/row'
+import { SymbolCard } from './symbol-card'
 
 interface Params {
   exchange: string
@@ -60,7 +62,7 @@ export class ExchangeConfig extends Component<Props> {
     return (
       <Page {...props}>
         {this.renderBalances()}
-        {this.renderStrategies()}
+        {this.renderSymbols()}
       </Page>
     )
   }
@@ -87,6 +89,7 @@ export class ExchangeConfig extends Component<Props> {
 
     const balances = Object.entries(this.props.exchangeStore.balances.get(this.exchange))
       .map(([coin, { total: balance }]) => ({ coin, balance }))
+      .filter(({ balance }) => Boolean(balance))
       .sort(({ coin: a }, { coin: b }) => (a > b ? 1 : -1))
 
     const fiatList = ['USD', 'EUR', 'GBP']
@@ -95,7 +98,7 @@ export class ExchangeConfig extends Component<Props> {
 
     return (
       <Card>
-        <Title>Balances</Title>
+        <Title size={2}>Exchange Balance</Title>
         <Flex>
           {[...fiats, ...coins].map(({ coin, balance }) => (
             <Balance key={coin} coin={coin} balance={balance} />
@@ -105,27 +108,21 @@ export class ExchangeConfig extends Component<Props> {
     )
   }
 
-  private renderStrategies() {
-    if (!this.props.botStore.bots.has(this.exchange) || !this.props.appStore.strategyList.size) return null
+  private renderSymbols() {
+    if (!this.props.botStore.bots.has(this.exchange)) return null
 
-    const symbols = [...this.props.botStore.bots.get(this.exchange).values()].map((symbol) => [...symbol.values()])
+    const symbols = [...this.props.botStore.bots.get(this.exchange).keys()]
 
-    return symbols.map((botConfig) =>
-      botConfig.map(({ exchange, strategy, symbol }, idx) => {
-        if (!this.props.appStore.strategyList.has(strategy)) return null
-
-        const { description } = this.props.appStore.strategyList.get(strategy)
-        const title = `${symbol} - ${strategy}`
-        return (
-          <TitleCard key={idx} titleSize={2} title={title} subtitle={description}>
-            <Flex>
-              <Link to={`/bots/${exchange}/${symbol.replace('/', '-')}/${strategy}`}>
-                <Button isOutline>Edit Strategy</Button>
-              </Link>
-            </Flex>
-          </TitleCard>
-        )
-      })
+    return (
+      <Row isWrap noPadding>
+        {symbols.map((symbol) => {
+          return (
+            <Column key={symbol} size={25}>
+              <SymbolCard exchange={this.exchange} symbol={symbol} />
+            </Column>
+          )
+        })}
+      </Row>
     )
   }
 

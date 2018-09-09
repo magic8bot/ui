@@ -1,0 +1,45 @@
+@import '../../styles/colors'
+
+
+.toggle-wrapper
+  display flex
+  justify-content space-between
+  margin-bottom 2rem
+
+  // .toggle-label
+  //   color $brand 
+
+  .toggle
+    height 2.2rem
+    width 4.4rem
+    transition border-color 100ms ease-out, background-color 100ms ease-out
+    background-color transparent
+    border $lightShade 1px solid
+    border-radius 0.4rem
+    cursor pointer
+    position relative
+
+    &:hover:after
+      background-color $brand
+
+    &:after
+      content ''
+      height 1.8rem
+      width 1.8rem
+      position absolute
+      border-radius 0.2rem
+      top .1rem
+      transition all 300ms ease-out
+      background-color $lightestGrey
+
+    &.toggle-on
+      background-color rgba($success, .2)
+
+      &:after
+        left 2.3rem
+
+    &.toggle-off
+      background-color rgba($danger, .2)
+
+      &:after
+        left .1rem

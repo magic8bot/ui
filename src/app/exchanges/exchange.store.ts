@@ -1,4 +1,4 @@
-import { observable, action } from 'mobx'
+import { observable, action, computed } from 'mobx'
 import { wsClient, API } from '../../lib'
 
 interface FieldBase {
@@ -66,6 +66,15 @@ export class ExchangeStore {
   @observable
   public balances: Map<string, Balances> = new Map()
 
+  @observable
+  public syncStates: Map<string, Map<string, 0 | 1 | 2>> = new Map()
+
+  constructor() {
+    wsClient.registerAction('sync-state', ({ exchange, symbol, state }) => {
+      this.setSyncState(exchange, symbol, state)
+    })
+  }
+
   @action
   public async getExchanges() {
     const exchanges = await API.get<ExchangeConfig[]>('/exchange')
@@ -73,7 +82,7 @@ export class ExchangeStore {
 
     await Promise.all(
       exchanges.map(async ({ exchange }) => {
-        const symbols = await API.get<string[]>(`/exchange/symbols?exchange=${exchange}`)
+        const symbols = await API.get<string[]>(`/exchange/${exchange}/symbols`)
         this.symbols.set(exchange, symbols)
       })
     )
@@ -86,19 +95,21 @@ export class ExchangeStore {
   }
 
   public async saveExchange(exchangeConfig: ExchangeConfig) {
-    await API.post<ExchangeConfig>('/exchange', exchangeConfig)
+    const { exchange } = exchangeConfig
+    await API.post<ExchangeConfig>(`/exchange/${exchange}`, exchangeConfig)
 
     this.updateConfig(exchangeConfig)
   }
 
   public async updateExchange(exchangeConfig: ExchangeConfig) {
-    await API.put<ExchangeConfig>('/exchange', exchangeConfig)
+    const { exchange } = exchangeConfig
+    await API.put<ExchangeConfig>(`/exchange/${exchange}`, exchangeConfig)
 
     this.updateConfig(exchangeConfig)
   }
 
   public async deleteExchange(exchange: string) {
-    await API.delete<void>('/exchange', { exchange })
+    await API.delete<void>(`/exchange/${exchange}`)
     this.removeExchange(exchange)
   }
 
@@ -107,9 +118,32 @@ export class ExchangeStore {
     this.exchanges.delete(exchange)
   }
 
+  @action
   public async getBalance(exchange: string) {
-    const balance = await API.get<Balances>(`/exchange/balance?exchange=${exchange}`)
+    const balance = await API.get<Balances>(`/exchange/${exchange}/balance`)
     this.balances.set(exchange, balance)
+  }
+
+  @action
+  public async getSync(exchange: string, symbol: string) {
+    const sync = await API.get<{ status: 0 | 1 | 2 }>(`/exchange/${exchange}/sync/${encodeURIComponent(symbol)}`)
+
+    this.setSyncState(exchange, symbol, sync.status)
+  }
+
+  @action
+  public async setSync(exchange: string, symbol: string, status: boolean) {
+    API.post(`/exchange/${exchange}/sync/${encodeURIComponent(symbol)}/${status ? 'start' : 'stop'}`)
+  }
+
+  public setSyncState(exchange: string, symbol: string, status: 0 | 1 | 2) {
+    if (!this.syncStates.has(exchange)) this.syncStates.set(exchange, new Map())
+
+    this.syncStates.get(exchange).set(symbol, status)
+  }
+
+  public getSyncState(exchange: string, symbol: string) {
+    return this.syncStates.has(exchange) && this.syncStates.get(exchange).get(symbol)
   }
 
   @action
