@@ -6,12 +6,14 @@ import { faRobot } from '@fortawesome/free-solid-svg-icons'
 import { AppStore } from '../app.store'
 import { Page } from '../../ui'
 import { BotCard } from './bot-card'
+import { ExchangeStore } from '../exchanges'
 
 interface Props {
   appStore?: AppStore
+  exchangeStore?: ExchangeStore
 }
 
-@inject('appStore')
+@inject('appStore', 'exchangeStore')
 @observer
 export class Bots extends Component<Props> {
   private title = 'Bots'
@@ -26,10 +28,10 @@ export class Bots extends Component<Props> {
   }
 
   private renderExchanges() {
-    if (!this.props.appStore.config || !this.props.appStore.exchanges) return null
+    if (!this.props.exchangeStore.exchanges.size || !this.props.appStore.exchangeList.size) return null
 
-    return Object.keys(this.props.appStore.exchanges)
-      .sort((a, b) => (a > b ? 1 : -1))
-      .map((exchange) => <BotCard key={exchange} exchange={exchange} />)
+    return Array.from(this.props.appStore.exchangeList.values())
+      .sort(({ name: a }, { name: b }) => (a > b ? 1 : -1))
+      .map(({ name, description }) => <BotCard key={name} exchange={name} description={description} />)
   }
 }

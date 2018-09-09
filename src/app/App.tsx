@@ -10,6 +10,7 @@ import { Header } from './header'
 import { Sidebar } from './sidebar'
 import { Content } from './content'
 import { AppStore } from './app.store'
+import { ExchangeStore } from './exchanges'
 
 import { wsClient } from '../lib'
 
@@ -20,14 +21,16 @@ const history = syncHistoryWithStore(browserHistory, routing)
 
 interface Props {
   appStore?: AppStore
+  exchangeStore?: ExchangeStore
 }
 
-@inject('appStore')
+@inject('appStore', 'exchangeStore')
 @observer
 export class App extends Component<Props> {
   public async componentDidMount() {
     await wsClient.connect()
-    this.props.appStore.loadAll()
+    await this.props.appStore.loadLists()
+    const exchanges = await this.props.exchangeStore.getExchanges()
   }
 
   public render() {

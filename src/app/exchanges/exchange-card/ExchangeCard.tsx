@@ -1,20 +1,18 @@
 import React, { Component } from 'react'
 import { observer, inject } from 'mobx-react'
 
-import { Field, FieldNode, FieldRoot, AppStore } from '../../app.store'
+import { Field, FieldNode, FieldRoot, AppStore, ExchangeOption } from '../../app.store'
 import { Card, Title, Subtext, Input, Button, Modal, Warntext, InputGroup } from '../../../ui'
 import { observable } from 'mobx'
+import { ExchangeStore, ExchangeConfig } from '../exchange.store'
 
 interface Props {
-  name: string
-  description: string
-  fields: Field[]
-  isNew: boolean
-  values: Record<string, any>
+  exchange: string
   appStore?: AppStore
+  exchangeStore?: ExchangeStore
 }
 
-@inject('appStore')
+@inject('appStore', 'exchangeStore')
 @observer
 export class ExchangeCard extends Component<Props> {
   @observable
@@ -26,22 +24,34 @@ export class ExchangeCard extends Component<Props> {
   @observable
   private modalOpen = false
 
+  @observable
+  private exchangeConfig: ExchangeOption
+
+  @observable
+  private exchangeValues: ExchangeConfig
+
   constructor(props) {
     super(props)
 
-    this.values.tradePollInterval = this.props.values.tradePollInterval
-    this.isNew = this.props.isNew
+    this.exchangeConfig = this.props.appStore.exchangeList.get(this.props.exchange)
+    this.exchangeValues = this.props.exchangeStore.exchanges.get(this.props.exchange)
+    this.isNew = this.exchangeValues.isNew
+    this.values.tradePollInterval = this.exchangeValues.tradePollInterval
   }
 
   public render() {
+    if (!this.exchangeConfig) return null
+
+    const { description, fields } = this.exchangeConfig
+
     return (
       <Card>
         <Title isUppercase size={2}>
-          <div>{this.props.name}</div>
+          <div>{this.props.exchange}</div>
         </Title>
-        <Subtext>{this.props.description}</Subtext>
+        <Subtext>{description}</Subtext>
         <form onSubmit={this.saveExchange}>
-          {this.renderFields(this.props.fields)}
+          {this.renderFields(fields)}
           {this.renderButtons()}
         </form>
         {this.renderModal()}
@@ -65,7 +75,9 @@ export class ExchangeCard extends Component<Props> {
   }
 
   private renderField(idx: number, field: FieldNode) {
-    const initValue = !this.props.values || !this.props.values[field.name] ? '' : this.props.values[field.name]
+    const values = this.exchangeValues
+    const initValue = !values || !values[field.name] ? '' : values[field.name]
+
     const isRequired = field.name.includes('auth.')
 
     return (
@@ -88,7 +100,7 @@ export class ExchangeCard extends Component<Props> {
     }
 
     const onSuccess = async () => {
-      await this.props.appStore.deleteExchange(this.props.name)
+      await this.props.exchangeStore.deleteExchange(this.props.exchange)
       this.modalOpen = false
     }
 
@@ -107,9 +119,8 @@ export class ExchangeCard extends Component<Props> {
 
     const values: any = this.getValues()
     this.isNew = false
-    this.props.appStore.config.exchanges.find(({ exchange }) => exchange === this.props.name).isNew = false
 
-    this.props.appStore.saveExchange({ exchange: this.props.name, ...values })
+    this.props.exchangeStore.saveExchange({ exchange: this.props.exchange, ...values })
   }
 
   private updateValues() {
@@ -119,7 +130,7 @@ export class ExchangeCard extends Component<Props> {
 
     if (!Object.keys(values).length) return
 
-    this.props.appStore.updateExchange({ exchange: this.props.name, ...values })
+    this.props.exchangeStore.updateExchange({ exchange: this.props.exchange, ...values })
     this.values = {}
   }
 
@@ -136,7 +147,7 @@ export class ExchangeCard extends Component<Props> {
         type: 'button',
         color: 'danger',
         text: this.isNew ? 'Cancel' : 'Delete',
-        onClick: this.isNew ? () => this.props.appStore.removeExchange(this.props.name) : () => (this.modalOpen = true),
+        onClick: this.isNew ? () => this.props.exchangeStore.removeExchange(this.props.exchange) : () => (this.modalOpen = true),
       },
       {
         type: this.isNew ? 'submit' : 'button',

@@ -7,10 +7,14 @@ import { Provider } from 'mobx-react'
 import { App } from './app'
 import { logStore } from './app/footer'
 import { appStore } from './app/app.store'
+import { exchangeStore } from './app/exchanges'
+import { botStore } from './app/bots'
+
+const stores = { logStore, appStore, exchangeStore, botStore }
 
 const root = document.getElementById('app-root')
 render(
-  <Provider logStore={logStore} appStore={appStore}>
+  <Provider {...stores}>
     <App />
   </Provider>,
   root

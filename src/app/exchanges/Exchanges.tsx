@@ -5,15 +5,18 @@ import { inject, observer } from 'mobx-react'
 import { faExchangeAlt } from '@fortawesome/free-solid-svg-icons'
 
 import { AppStore } from '../app.store'
+import { ExchangeStore } from './exchange.store'
+
 import { Card, Button, InputGroup, Select, Infotext, Page } from '../../ui'
 import { ExchangeCard } from './exchange-card'
 import { Row, Column } from '../../ui/row'
 
 interface Props {
   appStore?: AppStore
+  exchangeStore?: ExchangeStore
 }
 
-@inject('appStore')
+@inject('appStore', 'exchangeStore')
 @observer
 export class Exchanges extends Component<Props> {
   private title = 'Exchanges'
@@ -55,24 +58,24 @@ export class Exchanges extends Component<Props> {
   }
 
   private getOptions() {
-    if (!this.props.appStore.exchanges || !this.props.appStore.config) return []
-    const exchangeNames = Object.keys(this.props.appStore.exchanges)
+    if (!this.props.appStore.exchangeList.size || !this.props.exchangeStore.exchanges.size) return []
+    const exchangeNames = Array.from(this.props.appStore.exchangeList.keys())
 
-    const configuredExchanges = this.props.appStore.config.exchanges.map(({ exchange }) => exchange)
+    const configuredExchanges = Array.from(this.props.exchangeStore.exchanges.keys())
 
     return exchangeNames.filter((exchange) => !configuredExchanges.find((e) => e === exchange)).map((name) => ({ value: name, label: name }))
   }
 
   private renderExchanges() {
-    if (!this.props.appStore.config || !this.props.appStore.exchanges) return null
+    if (!this.props.appStore.exchangeList.size || !this.props.exchangeStore.exchanges.size) return null
 
-    const exchanges = this.props.appStore.config.exchanges.map(({ exchange: name, ...values }) => ({ name, ...this.props.appStore.exchanges[name], ...values }))
+    const configuredExchanges = Array.from(this.props.exchangeStore.exchanges.keys())
 
     return (
       <Row isWrap noPadding>
-        {exchanges.map(({ name, description, fields, isNew, ...values }, idx) => (
+        {configuredExchanges.map((exchange, idx) => (
           <Column key={idx} size={25}>
-            <ExchangeCard name={name} description={description} fields={fields} isNew={isNew} values={values} />
+            <ExchangeCard exchange={exchange} />
           </Column>
         ))}
       </Row>
@@ -80,8 +83,8 @@ export class Exchanges extends Component<Props> {
   }
 
   private renderInfo() {
-    const { appStore } = this.props
-    if (!appStore.config || !appStore.config.exchanges.length || !appStore.exchanges) return null
+    const { appStore, exchangeStore } = this.props
+    if (!exchangeStore.exchanges.size || !appStore.exchangeList.size) return null
 
     return (
       <Card>
@@ -98,7 +101,7 @@ export class Exchanges extends Component<Props> {
 
   private addExchange = () => {
     if (!this.selectedExchange) return
-    this.props.appStore.addExchange(this.selectedExchange.value)
+    this.props.exchangeStore.addExchange(this.selectedExchange.value)
     this.selectedExchange = null
   }
 }

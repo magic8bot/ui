@@ -1,12 +1,14 @@
 import React, { Component } from 'react'
 import { inject, observer } from 'mobx-react'
 
-import { AppStore, StrategyConfig } from '../../app.store'
+import { AppStore } from '../../app.store'
 import { Flex, Card, Title, Balance, Page, InputGroup, Button, Select, TitleCard, Link } from '../../../ui'
 import { RouterStore } from 'mobx-react-router'
 import { faChevronLeft } from '@fortawesome/free-solid-svg-icons'
 import { observable } from 'mobx'
 import { match } from 'react-router'
+import { ExchangeStore } from '../../exchanges'
+import { BotStore, BotConfig } from '../bot.store'
 
 interface Params {
   exchange: string
@@ -14,11 +16,13 @@ interface Params {
 
 interface Props {
   appStore?: AppStore
+  exchangeStore?: ExchangeStore
+  botStore?: BotStore
   routing?: RouterStore
   match?: match<Params>
 }
 
-@inject('appStore', 'routing')
+@inject('appStore', 'exchangeStore', 'botStore', 'routing')
 @observer
 export class ExchangeConfig extends Component<Props> {
   @observable
@@ -33,15 +37,21 @@ export class ExchangeConfig extends Component<Props> {
     label: string
   } = null
 
+  @observable
   private exchange: string = null
 
-  public render() {
-    if (!this.props.appStore.exchanges) return null
-
+  public async componentDidMount() {
     this.exchange = this.props.match.params.exchange
+    await this.props.botStore.getStrategies(this.exchange)
+    await this.props.exchangeStore.getBalance(this.exchange)
+  }
+
+  public render() {
+    if (!this.exchange || !this.props.appStore.exchangeList.size || !this.props.appStore.exchangeList.has(this.exchange)) return null
+
     const titleChildren = this.renderTitleChildren()
     const title = this.exchange[0].toUpperCase() + this.exchange.slice(1)
-    const subtitle = this.props.appStore.exchanges[this.exchange].description
+    const subtitle = this.props.appStore.exchangeList.get(this.exchange).description
     const icon = faChevronLeft
     const link = '/bots'
 
@@ -57,7 +67,7 @@ export class ExchangeConfig extends Component<Props> {
 
   private renderTitleChildren() {
     const symbols = this.getSymbols()
-    const strategies = this.getStrategies()
+    const strategies = this.getBots()
 
     return (
       <InputGroup alignment="end">
@@ -73,14 +83,13 @@ export class ExchangeConfig extends Component<Props> {
   }
 
   private renderBalances() {
-    if (!this.props.appStore.balances[this.exchange]) return null
+    if (!this.props.exchangeStore.balances.get(this.exchange)) return null
 
-    const balances = Object.entries(this.props.appStore.balances[this.exchange])
+    const balances = Object.entries(this.props.exchangeStore.balances.get(this.exchange))
       .map(([coin, { total: balance }]) => ({ coin, balance }))
       .sort(({ coin: a }, { coin: b }) => (a > b ? 1 : -1))
 
     const fiatList = ['USD', 'EUR', 'GBP']
-
     const fiats = balances.filter(({ coin }) => fiatList.includes(coin))
     const coins = balances.filter(({ coin }) => !fiatList.includes(coin))
 
@@ -97,29 +106,33 @@ export class ExchangeConfig extends Component<Props> {
   }
 
   private renderStrategies() {
-    if (!this.props.appStore.config) return null
+    if (!this.props.botStore.bots.has(this.exchange) || !this.props.appStore.strategyList.size) return null
 
-    const strategies = this.props.appStore.config.exchanges.find(({ exchange }) => exchange === this.exchange).strategies
+    const symbols = [...this.props.botStore.bots.get(this.exchange).values()].map((symbol) => [...symbol.values()])
 
-    return strategies.map(({ exchange, strategy, symbol }, idx) => {
-      const { description } = this.props.appStore.strategies[strategy]
-      const title = `${strategy} - ${symbol}`
-      return (
-        <TitleCard key={idx} titleSize={2} title={title} subtitle={description}>
-          <Flex>
-            <Link to={`/bots/${exchange}/${strategy}/${symbol.replace('/', '-')}`}>
-              <Button isOutline>Edit Strategy</Button>
-            </Link>
-          </Flex>
-        </TitleCard>
-      )
-    })
+    return symbols.map((botConfig) =>
+      botConfig.map(({ exchange, strategy, symbol }, idx) => {
+        if (!this.props.appStore.strategyList.has(strategy)) return null
+
+        const { description } = this.props.appStore.strategyList.get(strategy)
+        const title = `${symbol} - ${strategy}`
+        return (
+          <TitleCard key={idx} titleSize={2} title={title} subtitle={description}>
+            <Flex>
+              <Link to={`/bots/${exchange}/${symbol.replace('/', '-')}/${strategy}`}>
+                <Button isOutline>Edit Strategy</Button>
+              </Link>
+            </Flex>
+          </TitleCard>
+        )
+      })
+    )
   }
 
   private getSymbols() {
-    if (!this.props.appStore.symbols[this.exchange]) return []
+    if (!this.props.exchangeStore.symbols.has(this.exchange)) return []
 
-    return this.props.appStore.symbols[this.exchange].map((symbol) => ({ value: symbol, label: symbol }))
+    return this.props.exchangeStore.symbols.get(this.exchange).map((symbol) => ({ value: symbol, label: symbol }))
   }
 
   private selectSymbol = (value) => {
@@ -128,19 +141,13 @@ export class ExchangeConfig extends Component<Props> {
     this.selectedSymbol = value
   }
 
-  private getStrategies() {
-    if (!this.selectedSymbol || !this.props.appStore.strategies) return []
-    const strategyNames = Object.keys(this.props.appStore.strategies)
+  private getBots() {
+    if (!this.selectedSymbol || !this.props.appStore.strategyList) return []
+    const strategyNames = Array.from(this.props.appStore.strategyList.keys())
 
-    const configuredExchange = this.props.appStore.config.exchanges.find(({ exchange }) => exchange === this.exchange)
+    const configuredStrategies = this.props.botStore.getBots(this.exchange, this.selectedSymbol.value)
 
-    const configuredStrategies = configuredExchange.strategies.map(({ strategy, symbol }) => ({ strategy, symbol }))
-
-    return strategyNames
-      .filter((strategy) => {
-        return !configuredStrategies.find((s) => s.strategy === strategy && s.symbol === this.selectedSymbol.value)
-      })
-      .map((name) => ({ value: name, label: name }))
+    return strategyNames.filter((strategy) => !configuredStrategies.find((s) => s === strategy)).map((name) => ({ value: name, label: name }))
   }
 
   private selectStrategy = (value) => {
@@ -150,18 +157,18 @@ export class ExchangeConfig extends Component<Props> {
 
   private addStrategy = () => {
     if (!this.selectedStrategy || !this.selectedSymbol) return
-    const strategy = this.props.appStore.strategies[this.selectedStrategy.value].fields.reduce(
+    const strategy = this.props.appStore.strategyList.get(this.selectedStrategy.value).fields.reduce(
       (acc, field) => {
         acc[field.name] = field.default
         return acc
       },
       {
+        exchange: this.exchange,
         strategy: this.selectedStrategy.value,
         symbol: this.selectedSymbol.value,
       }
     )
-
-    this.props.appStore.addStrategy(this.exchange, strategy as StrategyConfig)
+    this.props.botStore.addStrategy(strategy as BotConfig)
     this.selectedStrategy = null
     this.selectedSymbol = null
   }

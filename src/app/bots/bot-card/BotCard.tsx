@@ -2,16 +2,18 @@ import React from 'react'
 import { AppStore } from '../../app.store'
 import { TitleCard, Flex, Link, Button } from '../../../ui'
 import { inject, observer } from 'mobx-react'
+import { ExchangeStore } from '../../exchanges'
 
 interface Props {
   exchange: string
-  appStore?: AppStore
+  description: string
+  exchangeStore?: ExchangeStore
 }
 
-export const BotCard = inject('appStore')(
-  observer(({ exchange, appStore }: Props) => {
-    const exchangeConfig = appStore.config.exchanges.find((ex) => ex.exchange === exchange)
-    const subtitle = appStore.exchanges[exchange].description
+export const BotCard = inject('exchangeStore')(
+  observer(({ exchange, exchangeStore, description }: Props) => {
+    const exchangeConfig = exchangeStore.exchanges.get(exchange)
+    const subtitle = description
     const isEnabled = exchangeConfig && !exchangeConfig.isNew
     const className = isEnabled ? '' : 'faded'
 

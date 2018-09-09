@@ -29,7 +29,7 @@ export class Content extends Component<Props> {
             <Route exact path="/exchanges" component={Exchanges} />
             <Route exact path="/bots" component={Bots} />
             <Route exact path="/bots/:exchange" component={ExchangeConfig} />
-            <Route exact path="/bots/:exchange/:strategy/:symbol" component={StrategyConfigContainer} />
+            <Route exact path="/bots/:exchange/:symbol/:strategy" component={StrategyConfigContainer} />
           </Switch>
         </div>
         <Footer />

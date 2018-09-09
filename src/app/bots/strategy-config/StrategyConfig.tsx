@@ -1,11 +1,12 @@
 import React, { Component } from 'react'
 import { observer, inject } from 'mobx-react'
 
-import { Field, FieldNode, AppStore } from '../../app.store'
+import { Field, FieldNode } from '../../app.store'
 import { Title, Input, Button, Modal, Warntext, InputGroup, TitleCard } from '../../../ui'
 import { observable } from 'mobx'
 import { Row, Column } from '../../../ui/row'
 import { RouterStore } from '../../router.store'
+import { BotStore } from '../bot.store'
 
 interface Props {
   exchange: string
@@ -13,11 +14,11 @@ interface Props {
   symbol: string
   fields: Field[]
   values: Record<string, any>
-  appStore?: AppStore
   routing?: RouterStore
+  botStore?: BotStore
 }
 
-@inject('appStore', 'routing')
+@inject('routing', 'botStore')
 @observer
 export class StrategyConfig extends Component<Props> {
   @observable
@@ -58,7 +59,7 @@ export class StrategyConfig extends Component<Props> {
 
     const onSuccess = async () => {
       const { exchange, strategy, symbol } = this.props
-      await this.props.appStore.deleteStrategy(exchange, strategy, symbol)
+      await this.props.botStore.deleteStrategy({ exchange, strategy, symbol })
       this.props.routing.replace(`/bots/${exchange}`)
       this.modalOpen = false
     }
@@ -80,7 +81,7 @@ export class StrategyConfig extends Component<Props> {
 
     const { exchange, strategy, symbol } = this.props
 
-    this.props.appStore.updateStrategy({ exchange, strategy, symbol, ...values })
+    this.props.botStore.updateStrategy({ exchange, strategy, symbol, ...values })
     this.values = {}
   }
 
