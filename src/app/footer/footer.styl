@@ -5,7 +5,7 @@
   position relative
   margin-left $border-width
   width 100%
-  height 300px
+  height 30rem
   overflow hidden
   transition height 150ms ease-in 0ms
   background-color $cardBackground
@@ -14,10 +14,10 @@
     display flex
     justify-content flex-end
     align-items center
-    height 45px
+    height 4.5rem
     position absolute
-    padding-left 10px
-    padding-right 10px
+    padding-left 1rem
+    padding-right 1rem
     top 0
     width 100%
     font-size 1.4rem
@@ -29,7 +29,7 @@
       cursor pointer
 
   &.closed
-    height 45px
+    height 4.5rem
     transition height 150ms ease-out 400ms
     
     .card.card-large .inner-footer
@@ -42,7 +42,7 @@
         transition opacity 150ms ease-out 0ms
 
   .card.card-large
-    padding-top 45px
+    padding-top 4.5rem
     height 100%
     margin 0
 
@@ -50,11 +50,11 @@
       display flex
       flex-direction column
       justify-content flex-end
-      padding 10px
+      padding 1rem
       height "calc(100% - %s)" % $border-width
       width 100%
-      box-shadow inset 0 0 8px 4px rgba(black, 0.4)
-      border-radius 4px
+      box-shadow inset 0 0 .8rem .4rem rgba(black, 0.4)
+      border-radius .4rem
       background-color rgba(black, 0.1)
       transition box-shadow 150ms ease-in 200ms, background-color 150ms ease-in 250ms
 

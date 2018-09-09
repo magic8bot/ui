@@ -50,7 +50,7 @@ export class Exchanges extends Component<Props> {
       <InputGroup>
         <Select options={options} value={this.selectedExchange} onChange={this.selectExchange} />
 
-        <Button isDisabled={!this.selectedExchange} onClick={this.addExchange}>
+        <Button isOutline isDisabled={!this.selectedExchange} onClick={this.addExchange}>
           Add Exchange
         </Button>
       </InputGroup>

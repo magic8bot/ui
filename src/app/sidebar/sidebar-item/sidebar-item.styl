@@ -2,24 +2,24 @@
 @import '../../../styles/vars'
 
 .sidebar-item
-  height 45px
-  line-height 45px
+  height 4.5rem
+  line-height 4.5rem
   background-color $cardBackground
-  padding-left 20px
+  padding-left 2rem
   margin-top $border-width
   transition padding-left 100ms ease-in, filter 200ms ease-in 50ms
 
   &:hover
     filter brightness(1.5)
-    padding-left 25px
+    padding-left 2.5rem
 
 .active .sidebar-item
-  padding-left 25px
+  padding-left 2.5rem
 
   &:before
     content ''
     position absolute
     left 0
-    height 45px
-    width 5px
+    height 4.5rem
+    width .5rem
     background-color $redAccent
