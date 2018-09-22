@@ -3,7 +3,7 @@ import { inject, observer } from 'mobx-react'
 
 import { AppStore } from '../../../app.store'
 import { Flex, Card, Title, Button, TitleCard, Link, Toggle, Wallet } from '../../../../ui'
-import { observable, reaction } from 'mobx'
+import { observable, reaction, IReactionDisposer, autorun } from 'mobx'
 import { BotStore } from '../../bot.store'
 import { ExchangeStore } from '../../../exchanges'
 
@@ -22,18 +22,26 @@ export class SymbolCard extends Component<Props> {
   private isSyncing = false
   private asset: number
   private currency: number
+  private disposer: IReactionDisposer
 
   constructor(props) {
     super(props)
 
     const { exchange, symbol } = this.props
 
-    reaction(() => this.props.exchangeStore.getSyncState(exchange, symbol), (state) => (this.isSyncing = !!state))
+    this.disposer = autorun(() => {
+      const state = this.props.exchangeStore.getSyncState(exchange, symbol)
+      this.isSyncing = !!state
+    })
   }
 
   public async componentDidMount() {
     const { exchange, symbol } = this.props
     await this.props.exchangeStore.getSync(exchange, symbol)
+  }
+
+  public async componentWillUnmount() {
+    this.disposer()
   }
 
   public render() {
@@ -44,7 +52,7 @@ export class SymbolCard extends Component<Props> {
           <Toggle value={this.isSyncing} onChange={this.handleSyncToggle} label="Sync Trades" />
           {this.renderBalances()}
         </Card>
-        <Flex direction="col">{this.renderStrategies(this.props.symbol)}</Flex>
+        <Flex direction="col">{this.renderStrategies()}</Flex>
       </div>
     )
   }
@@ -56,17 +64,17 @@ export class SymbolCard extends Component<Props> {
     this.props.exchangeStore.setSync(exchange, symbol, this.isSyncing)
   }
 
-  private renderStrategies(symbol: string) {
+  private renderStrategies() {
     if (!this.props.botStore.bots.has(this.props.exchange) || !this.props.appStore.strategyList.size) return null
 
     const strategies = [
       ...this.props.botStore.bots
         .get(this.props.exchange)
-        .get(symbol)
+        .get(this.props.symbol)
         .values(),
     ]
 
-    return strategies.map(({ exchange, strategy }, idx) => {
+    return strategies.map(({ exchange, strategy, symbol }, idx) => {
       const { appStore, botStore } = this.props
       if (
         !appStore.strategyList.has(strategy) ||

@@ -58,7 +58,7 @@ export class Exchanges extends Component<Props> {
   }
 
   private getOptions() {
-    if (!this.props.appStore.exchangeList.size || !this.props.exchangeStore.exchanges.size) return []
+    if (!this.props.appStore.exchangeList.size || !this.props.exchangeStore.exchanges) return []
     const exchangeNames = Array.from(this.props.appStore.exchangeList.keys())
 
     const configuredExchanges = Array.from(this.props.exchangeStore.exchanges.keys())

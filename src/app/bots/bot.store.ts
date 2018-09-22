@@ -69,8 +69,6 @@ export class BotStore {
     const bots = await API.get<BotConfig[]>(`/strategy?exchange=${exchange}`)
     bots.forEach((botConfig) => {
       this.setBot(botConfig)
-      const { symbol, strategy } = botConfig
-      this.getWallet(exchange, symbol, strategy)
     })
   }
 
@@ -90,6 +88,8 @@ export class BotStore {
     const { exchange, symbol, strategy } = botConfig
     const bots = this.bots.get(exchange).get(symbol)
     bots.delete(strategy)
+
+    if (!bots.size) this.bots.get(exchange).delete(symbol)
   }
 
   public getBots(exchange: string, symbol: string) {
@@ -116,6 +116,8 @@ export class BotStore {
 
     const bots = this.bots.get(exchange).get(symbol)
     bots.set(strategy, botConfig)
+
+    this.getWallet(exchange, symbol, strategy)
   }
 
   @action
