@@ -30,7 +30,7 @@ export const Balance = ({ coin, balance }: Props) => {
     <div className="balance">
       {getIcon()}
       <div className="balance-coin">{coin}:</div>
-      <div className="balance-value">{balance}</div>
+      <div className="balance-value">{balance.toLocaleString('fullwide')}</div>
     </div>
   )
 }

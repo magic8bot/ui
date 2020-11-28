@@ -1,4 +1,4 @@
-import { observable, action } from 'mobx'
+import { observable, action, computed } from 'mobx'
 import { wsClient, API } from '../../lib'
 
 interface FieldBase {
@@ -51,6 +51,7 @@ export interface BotConfig {
   strategy: string
   symbol: string
   wallet: WalletConfig
+  status: boolean
 }
 
 interface Wallet {
@@ -65,11 +66,15 @@ export class BotStore {
   @observable
   public wallets: Map<string, Map<string, Map<string, Wallet>>> = new Map()
 
+  public isBotOn(exchange: string, symbol: string, strategy: string) {
+    if (!this.bots.has(exchange) || !this.bots.get(exchange).has(symbol) || !this.bots.get(exchange).get(symbol).has(strategy)) return false
+
+    return this.bots.get(exchange).get(symbol).get(strategy).status
+  }
+
   public async getStrategies(exchange: string) {
     const bots = await API.get<BotConfig[]>(`/strategy?exchange=${exchange}`)
-    bots.forEach((botConfig) => {
-      this.setBot(botConfig)
-    })
+    bots.forEach((botConfig) => this.setBot(botConfig))
   }
 
   public async addStrategy(botConfig: BotConfig) {
@@ -95,17 +100,20 @@ export class BotStore {
   public getBots(exchange: string, symbol: string) {
     if (!this.bots.has(exchange) || !this.bots.get(exchange).has(symbol)) return []
 
-    return Array.from(
-      this.bots
-        .get(exchange)
-        .get(symbol)
-        .keys()
-    )
+    return Array.from(this.bots.get(exchange).get(symbol).keys())
   }
 
   public async getWallet(exchange: string, symbol: string, strategy: string) {
     const wallet = await API.get<Wallet>(`/strategy/wallet?exchange=${exchange}&symbol=${symbol}&strategy=${strategy}`)
     this.setWallet(exchange, symbol, strategy, wallet)
+  }
+
+  @action
+  public async setStrategy(exchange: string, symbol: string, strategy: string, status: boolean) {
+    this.bots.get(exchange).get(symbol).get(strategy).status = status
+    const result = await API.post<{ status: boolean }>(`/strategy/${status ? 'start' : 'stop'}`, { exchange, symbol, strategy })
+
+    this.bots.get(exchange).get(symbol).get(strategy).status = result.status
   }
 
   @action
