@@ -17,7 +17,11 @@ export class API {
 
   private static BASE_URL = 'http://localhost:8080/api'
 
-  private static async request<T>(url: string, method: 'GET' | 'POST' | 'PUT' | 'DELETE', body?: Record<string, any>): Promise<T> {
+  private static async request<T>(
+    url: string,
+    method: 'GET' | 'POST' | 'PUT' | 'DELETE',
+    body?: Record<string, any>
+  ): Promise<T> {
     const options: RequestInit = { method }
     options.headers = { 'Content-Type': 'application/json' }
 

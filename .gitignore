@@ -3,7 +3,6 @@ node_modules
 npm-debug.log
 conf.ts
 .env
-dist
 .idea
 coverage
 .vscode
@@ -12,3 +11,4 @@ database
 *.log
 log.log*
 .audit.json
+dist

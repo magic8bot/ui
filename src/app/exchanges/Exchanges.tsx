@@ -58,12 +58,14 @@ export class Exchanges extends Component<Props> {
   }
 
   private getOptions() {
-    if (!this.props.appStore.exchangeList.size || !this.props.exchangeStore.exchanges) return []
+    if (!this.props.exchangeStore.exchanges) return []
     const exchangeNames = Array.from(this.props.appStore.exchangeList.keys())
 
     const configuredExchanges = Array.from(this.props.exchangeStore.exchanges.keys())
 
-    return exchangeNames.filter((exchange) => !configuredExchanges.find((e) => e === exchange)).map((name) => ({ value: name, label: name }))
+    return exchangeNames
+      .filter((exchange) => !configuredExchanges.find((e) => e === exchange))
+      .map((name) => ({ value: name, label: name }))
   }
 
   private renderExchanges() {
@@ -89,7 +91,8 @@ export class Exchanges extends Component<Props> {
     return (
       <Card>
         <Infotext>
-          <b>Info:</b> Modifying any setting for an exchange <i>will stop</i> all trade syncs, tickers, and strategies. It's up to you to manually restart them.
+          <b>Info:</b> Modifying any setting for an exchange <i>will stop</i> all trade syncs, tickers, and strategies.
+          It's up to you to manually restart them.
         </Infotext>
       </Card>
     )

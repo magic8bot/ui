@@ -12,8 +12,6 @@ import { Content } from './content'
 import { AppStore } from './app.store'
 import { ExchangeStore } from './exchanges'
 
-import { wsClient } from '../lib'
-
 const browserHistory = createBrowserHistory()
 const routing = new RouterStore()
 
@@ -28,7 +26,6 @@ interface Props {
 @observer
 export class App extends Component<Props> {
   public async componentDidMount() {
-    await wsClient.connect()
     await this.props.appStore.loadLists()
     await this.props.exchangeStore.getExchanges()
   }

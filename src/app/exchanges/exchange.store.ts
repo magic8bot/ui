@@ -1,5 +1,5 @@
-import { observable, action, computed } from 'mobx'
-import { wsClient, API } from '../../lib'
+import { observable, action } from 'mobx'
+import { API } from '../../lib'
 
 interface FieldBase {
   name: string
@@ -69,11 +69,7 @@ export class ExchangeStore {
   @observable
   public syncStates: Map<string, Map<string, 0 | 1 | 2>> = new Map()
 
-  constructor() {
-    wsClient.registerAction('sync-state', ({ exchange, symbol, state }) => {
-      this.setSyncState(exchange, symbol, state)
-    })
-  }
+  constructor() {}
 
   @action
   public async getExchanges() {

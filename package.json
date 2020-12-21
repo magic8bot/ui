@@ -11,7 +11,7 @@
   "scripts": {
     "clean": "rimraf ./dist",
     "start:dev": "webpack serve",
-    "build": "tsc",
+    "build": "webpack",
     "dist": "npm run build",
     "rebuild": "npm run clean && npm run dist",
     "lint": "tslint -p ./tsconfig.json",
