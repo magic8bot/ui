@@ -3,7 +3,7 @@ import './input-group.styl'
 import React from 'react'
 import { Flex } from '../flex'
 
-interface Props extends React.Props<any> {
+interface Props extends React.PropsWithChildren<any> {
   alignment?: 'start' | 'end'
 }
 

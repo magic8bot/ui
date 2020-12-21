@@ -3,7 +3,7 @@ import React from 'react'
 import { Card, Title, Subtext, TextWithIcon } from '..'
 import { IconDefinition } from '@fortawesome/free-solid-svg-icons'
 
-interface Props extends React.Props<any> {
+interface Props extends React.PropsWithChildren<any> {
   title: string
   subtitle?: string
   className?: string
@@ -12,7 +12,15 @@ interface Props extends React.Props<any> {
   link?: string
 }
 
-export const TitleCard = ({ title, subtitle = null, className = '', titleSize = 1, icon = null, link = null, children }: Props) => {
+export const TitleCard = ({
+  title,
+  subtitle = null,
+  className = '',
+  titleSize = 1,
+  icon = null,
+  link = null,
+  children,
+}: Props) => {
   const isUnderlined = titleSize === 1
   const isUppercase = !isUnderlined
 

@@ -1,5 +1,5 @@
-import { observable, action, computed } from 'mobx'
-import { wsClient, API } from '../../lib'
+import { observable, action } from 'mobx'
+import { API } from '../../lib'
 
 interface FieldBase {
   name: string
@@ -66,8 +66,17 @@ export class BotStore {
   @observable
   public wallets: Map<string, Map<string, Map<string, Wallet>>> = new Map()
 
+  public isBotConfigured(exchange: string, symbol: string, strategy: string) {
+    const isBotConfigured =
+      this.bots.has(exchange) &&
+      this.bots.get(exchange).has(symbol) &&
+      this.bots.get(exchange).get(symbol).has(strategy)
+
+    return isBotConfigured
+  }
+
   public isBotOn(exchange: string, symbol: string, strategy: string) {
-    if (!this.bots.has(exchange) || !this.bots.get(exchange).has(symbol) || !this.bots.get(exchange).get(symbol).has(strategy)) return false
+    if (!this.isBotConfigured(exchange, symbol, strategy)) return false
 
     return this.bots.get(exchange).get(symbol).get(strategy).status
   }
@@ -108,10 +117,22 @@ export class BotStore {
     this.setWallet(exchange, symbol, strategy, wallet)
   }
 
+  public async updateWallet(exchange: string, symbol: string, strategy: string, wallet: Wallet) {
+    const payload = { exchange, symbol, strategy, ...wallet }
+    const res = await API.put<{ error: string } & Wallet>('/strategy/wallet', payload)
+    if (typeof res.error !== 'undefined') return console.error(res.error)
+
+    await this.getWallet(exchange, symbol, strategy)
+  }
+
   @action
   public async setStrategy(exchange: string, symbol: string, strategy: string, status: boolean) {
     this.bots.get(exchange).get(symbol).get(strategy).status = status
-    const result = await API.post<{ status: boolean }>(`/strategy/${status ? 'start' : 'stop'}`, { exchange, symbol, strategy })
+    const result = await API.post<{ status: boolean }>(`/strategy/${status ? 'start' : 'stop'}`, {
+      exchange,
+      symbol,
+      strategy,
+    })
 
     this.bots.get(exchange).get(symbol).get(strategy).status = result.status
   }
@@ -119,8 +140,8 @@ export class BotStore {
   @action
   private setBot(botConfig: BotConfig) {
     const { exchange, symbol, strategy } = botConfig
-    if (!this.bots.has(exchange)) this.bots.set(exchange, new Map())
-    if (!this.bots.get(exchange).has(symbol)) this.bots.get(exchange).set(symbol, new Map())
+    if (!this.bots.has(exchange)) this.bots.set(exchange, observable(new Map()))
+    if (!this.bots.get(exchange).has(symbol)) this.bots.get(exchange).set(symbol, observable(new Map()))
 
     const bots = this.bots.get(exchange).get(symbol)
     bots.set(strategy, botConfig)
@@ -130,8 +151,8 @@ export class BotStore {
 
   @action
   private setWallet(exchange: string, symbol: string, strategy: string, wallet: Wallet) {
-    if (!this.wallets.has(exchange)) this.wallets.set(exchange, new Map())
-    if (!this.wallets.get(exchange).has(symbol)) this.wallets.get(exchange).set(symbol, new Map())
+    if (!this.wallets.has(exchange)) this.wallets.set(exchange, observable(new Map()))
+    if (!this.wallets.get(exchange).has(symbol)) this.wallets.get(exchange).set(symbol, observable(new Map()))
 
     const bots = this.wallets.get(exchange).get(symbol)
     bots.set(strategy, wallet)

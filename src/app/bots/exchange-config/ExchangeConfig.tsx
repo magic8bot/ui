@@ -1,12 +1,12 @@
 import React, { Component } from 'react'
+import { observable } from 'mobx'
 import { inject, observer } from 'mobx-react'
+import { match } from 'react-router'
+import { RouterStore } from 'mobx-react-router'
+import { faChevronLeft } from '@fortawesome/free-solid-svg-icons'
 
 import { AppStore } from '../../app.store'
 import { Flex, Card, Title, Balance, Page, InputGroup, Button, Select } from '../../../ui'
-import { RouterStore } from 'mobx-react-router'
-import { faChevronLeft } from '@fortawesome/free-solid-svg-icons'
-import { observable } from 'mobx'
-import { match } from 'react-router'
 import { ExchangeStore } from '../../exchanges'
 import { BotStore, BotConfig } from '../bot.store'
 import { Row, Column } from '../../../ui/row'
@@ -49,7 +49,12 @@ export class ExchangeConfig extends Component<Props> {
   }
 
   public render() {
-    if (!this.exchange || !this.props.appStore.exchangeList.size || !this.props.appStore.exchangeList.has(this.exchange)) return null
+    if (
+      !this.exchange ||
+      !this.props.appStore.exchangeList.size ||
+      !this.props.appStore.exchangeList.has(this.exchange)
+    )
+      return null
 
     const titleChildren = this.renderTitleChildren()
     const title = this.exchange[0].toUpperCase() + this.exchange.slice(1)
@@ -73,9 +78,20 @@ export class ExchangeConfig extends Component<Props> {
 
     return (
       <InputGroup alignment="end">
-        <Select placeholder="Select Symbol..." options={symbols} value={this.selectedSymbol} onChange={this.selectSymbol} />
+        <Select
+          placeholder="Select Symbol..."
+          options={symbols}
+          value={this.selectedSymbol}
+          onChange={this.selectSymbol}
+        />
 
-        <Select isDisabled={!this.selectedSymbol} placeholder="Select Strategy..." options={strategies} value={this.selectedStrategy} onChange={this.selectStrategy} />
+        <Select
+          isDisabled={!this.selectedSymbol}
+          placeholder="Select Strategy..."
+          options={strategies}
+          value={this.selectedStrategy}
+          onChange={this.selectStrategy}
+        />
 
         <Button isOutline color="success" onClick={this.addStrategy}>
           Add Strategy
@@ -144,7 +160,9 @@ export class ExchangeConfig extends Component<Props> {
 
     const configuredStrategies = this.props.botStore.getBots(this.exchange, this.selectedSymbol.value)
 
-    return strategyNames.filter((strategy) => !configuredStrategies.find((s) => s === strategy)).map((name) => ({ value: name, label: name }))
+    return strategyNames
+      .filter((strategy) => !configuredStrategies.find((s) => s === strategy))
+      .map((name) => ({ value: name, label: name }))
   }
 
   private selectStrategy = (value) => {

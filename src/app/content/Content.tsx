@@ -9,6 +9,7 @@ import { Home } from '../home'
 import { Footer } from '../footer'
 import { Exchanges } from '../exchanges'
 import { Bots, ExchangeConfig, StrategyConfigContainer } from '../bots'
+import { WalletAdjust } from '../bots/wallet-adjust'
 
 interface Props {
   routing?: RouterStore
@@ -30,6 +31,7 @@ export class Content extends Component<Props> {
             <Route exact path="/bots" component={Bots} />
             <Route exact path="/bots/:exchange" component={ExchangeConfig} />
             <Route exact path="/bots/:exchange/:symbol/:strategy" component={StrategyConfigContainer} />
+            <Route exact path="/bots/:exchange/:symbol/:strategy/wallet" component={WalletAdjust} />
           </Switch>
         </div>
         <Footer />

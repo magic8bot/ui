@@ -10,7 +10,7 @@ class WsClient {
   private queue: { action: string; payload: Payload }[] = []
 
   public connect = () => {
-    return new Promise((resolve) => {
+    return new Promise<void>((resolve) => {
       this.socket = new WebSocket('ws://localhost:19807')
 
       this.socket.onmessage = this.handleMessage
@@ -43,7 +43,7 @@ class WsClient {
   public async once(actionName: string, actionFn: (payload: Payload) => void) {
     if (this.actions.has(actionName)) return
 
-    return new Promise((resolve) => {
+    return new Promise<void>((resolve) => {
       this.actions.set(actionName, async (payload) => {
         this.actions.delete(actionName)
         await actionFn(payload)

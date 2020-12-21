@@ -30,7 +30,7 @@ export class App extends Component<Props> {
   public async componentDidMount() {
     await wsClient.connect()
     await this.props.appStore.loadLists()
-    const exchanges = await this.props.exchangeStore.getExchanges()
+    await this.props.exchangeStore.getExchanges()
   }
 
   public render() {

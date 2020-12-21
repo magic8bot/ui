@@ -4,7 +4,7 @@ import React from 'react'
 import { inject, observer } from 'mobx-react'
 import { RouterStore } from 'mobx-react-router'
 
-interface Props extends React.Props<any> {
+interface Props extends React.PropsWithChildren<any> {
   to: string
   routing?: RouterStore
 }

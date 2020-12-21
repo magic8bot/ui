@@ -95,9 +95,13 @@ export class SymbolCard extends Component<Props> {
           <Toggle value={botStore.isBotOn(exchange, symbol, strategy)} onChange={this.handleStrategyToggle(exchange, symbol, strategy)} label="Enabled" />
 
           <Wallet asset={a} currency={c} assetBalance={asset} currencyBalance={currency} />
-          <Flex>
+          <Flex alignment="between">
             <Link to={`/bots/${exchange}/${symbol.replace('/', '-')}/${strategy}`}>
               <Button isOutline>Edit Strategy</Button>
+            </Link>
+
+            <Link to={`/bots/${exchange}/${symbol.replace('/', '-')}/${strategy}/wallet`}>
+              <Button isOutline>Edit Wallet</Button>
             </Link>
           </Flex>
         </TitleCard>

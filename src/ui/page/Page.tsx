@@ -4,7 +4,7 @@ import { IconDefinition } from '@fortawesome/free-solid-svg-icons'
 import { Flex } from '../flex'
 import { TitleCard } from '../title-card'
 
-interface Props extends React.Props<any> {
+interface Props extends React.PropsWithChildren<any> {
   title: string
   subtitle: string
   icon?: IconDefinition

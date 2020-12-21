@@ -60,7 +60,11 @@ export class ExchangeCard extends Component<Props> {
   }
 
   private renderFields(fields: Field[]) {
-    return fields.map((field, idx) => (!Array.isArray(field.type) ? this.renderField(idx, field as FieldNode) : this.renderNestedFields(idx, field as FieldRoot)))
+    return fields.map((field, idx) =>
+      !Array.isArray(field.type)
+        ? this.renderField(idx, field as FieldNode)
+        : this.renderNestedFields(idx, field as FieldRoot)
+    )
   }
 
   private renderNestedFields(idx: number, field: FieldRoot) {
@@ -147,7 +151,9 @@ export class ExchangeCard extends Component<Props> {
         type: 'button',
         color: 'danger',
         text: this.isNew ? 'Cancel' : 'Delete',
-        onClick: this.isNew ? () => this.props.exchangeStore.removeExchange(this.props.exchange) : () => (this.modalOpen = true),
+        onClick: this.isNew
+          ? () => this.props.exchangeStore.removeExchange(this.props.exchange)
+          : () => (this.modalOpen = true),
       },
       {
         type: this.isNew ? 'submit' : 'button',

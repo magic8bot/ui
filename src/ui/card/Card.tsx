@@ -2,7 +2,7 @@ import './card.styl'
 
 import React from 'react'
 
-interface Props extends React.Props<any> {
+interface Props extends React.PropsWithChildren<any> {
   size?: 'small' | 'large'
   className?: string
 }

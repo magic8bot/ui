@@ -2,7 +2,7 @@ import './title.styl'
 
 import React from 'react'
 
-interface Props extends React.Props<any> {
+interface Props extends React.PropsWithChildren<any> {
   size?: 1 | 2 | 3 | 4 | 5 | 6
   isUnderlined?: boolean
   isUppercase?: boolean
